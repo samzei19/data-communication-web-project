@@ -1,1497 +1,1444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-<title>Data Communications — Samuel Osei Nyampong</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-
+<title>Samuel Osei Nyampong — Data Communications</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  background:#050505;
+  color:#f0ede8;
+  font-family:'Space Grotesk',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+#cursor{
+  position:fixed;width:10px;height:10px;
+  background:#f5c842;border-radius:50%;
+  pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:transform .08s,width .2s,height .2s,background .2s;
+  mix-blend-mode:difference;
+}
+#cursor-ring{
+  position:fixed;width:36px;height:36px;
+  border:1px solid rgba(245,200,66,.4);border-radius:50%;
+  pointer-events:none;z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:transform .18s ease-out,width .3s,height .3s,opacity .3s;
+}
+body:has(.pipe-node:hover) #cursor,
+body:has(.btn:hover) #cursor{width:18px;height:18px;}
+
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:#050505;}
+::-webkit-scrollbar-thumb{background:#f5c842;}
 
 :root{
-  --y:#ffd43b;
-  --g:#ffb703;
-  --dark:#0a0a0a;
-  --card:rgba(255,255,255,0.04);
-  --border:rgba(255,212,59,0.15);
-  --text:#e8e8e8;
-  --muted:#909090;
+  --gold:#f5c842;
+  --gold2:#e8a812;
+  --dim:rgba(245,200,66,.12);
+  --dimb:rgba(245,200,66,.06);
+  --glass:rgba(255,255,255,.03);
+  --border:rgba(255,255,255,.07);
+  --borderG:rgba(245,200,66,.2);
+  --muted:#888;
+  --r:20px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+body::before{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.028;mix-blend-mode:overlay;
 }
 
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  background:var(--dark);
-  color:var(--text);
-  font-family:'DM Sans',sans-serif;
-  overflow-x:hidden;
-}
-
-::-webkit-scrollbar{
-  width:8px;
-}
-
-::-webkit-scrollbar-thumb{
-  background:var(--y);
-  border-radius:20px;
-}
-
-/* BACKGROUND */
-
-#bg-canvas{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-}
-
-/* NAV */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
 nav{
-  position:fixed;
-  top:0;
-  width:100%;
-  z-index:999;
-  background:rgba(10,10,10,.85);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,212,59,.1);
-
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  padding:1rem 2rem;
+  position:fixed;top:0;width:100%;z-index:900;
+  padding:0 2.5rem;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:rgba(5,5,5,.7);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
 }
-
-.logo{
-  font-family:'Syne',sans-serif;
-  color:var(--y);
-  font-weight:800;
-  letter-spacing:.12em;
-  font-size:1rem;
+.logo-mark{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.3rem;letter-spacing:.18em;
+  color:var(--gold);
 }
-
-.nav-links{
-  display:flex;
-  list-style:none;
-  gap:1.4rem;
-  flex-wrap:wrap;
-}
-
+.nav-right{display:flex;align-items:center;gap:2rem;}
+.nav-links{display:flex;list-style:none;gap:1.8rem;}
 .nav-links a{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;font-weight:400;
+  color:var(--muted);text-decoration:none;
+  letter-spacing:.08em;
+  transition:color .25s;
   position:relative;
-  text-decoration:none;
-  font-size:.82rem;
-  font-family:'DM Mono',monospace;
-  font-weight:700;
-
-  background:linear-gradient(
-    90deg,
-    #ffd43b,
-    #fff4b0,
-    #ffb703,
-    #ffd43b
-  );
-
-  background-size:300% auto;
-
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-
-  animation:navFlow 6s linear infinite;
 }
-
 .nav-links a::after{
-  content:'';
-  position:absolute;
-  left:0;
-  bottom:-5px;
-  width:0%;
-  height:2px;
-  border-radius:10px;
-  background:var(--y);
-  transition:.3s;
+  content:'';position:absolute;bottom:-4px;left:0;
+  width:0;height:1px;background:var(--gold);
+  transition:width .3s cubic-bezier(.25,.46,.45,.94);
 }
-
-.nav-links a:hover::after{
-  width:100%;
+.nav-links a:hover{color:#f0ede8;}
+.nav-links a:hover::after{width:100%;}
+.nav-status{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  color:var(--muted);
 }
-
-@keyframes navFlow{
-  from{
-    background-position:0%;
-  }
-
-  to{
-    background-position:300%;
-  }
+.status-dot{
+  width:6px;height:6px;border-radius:50%;background:#4ade80;
+  animation:statusPulse 2s ease-in-out infinite;
 }
+@keyframes statusPulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-/* HERO */
-
+/* ─── HERO — fixed padding-top so name clears the 64px nav ─── */
 .hero{
+  position:relative;z-index:2;
   min-height:100vh;
-
-  display:flex;
-  justify-content:center;
+  display:grid;
+  grid-template-columns:1fr 1fr;
   align-items:center;
-
-  padding:8rem 2rem 5rem;
-
-  position:relative;
-  z-index:2;
+  padding:80px 6rem 0; /* was 0 6rem — now 80px top so name never hides under nav */
+  gap:4rem;
 }
-
-.hero-content{
-  max-width:850px;
-  text-align:center;
+.hero-left{}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:.8rem;
+  margin-bottom:1.5rem;
 }
-
-.avatar{
-  width:150px;
-  height:150px;
-  margin:0 auto 1.5rem;
-  border-radius:50%;
+.eyebrow-line{width:32px;height:1px;background:var(--gold);}
+.eyebrow-text{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.14em;
+  color:var(--gold);text-transform:uppercase;
+}
+.hero-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,8vw,7rem);
+  line-height:.92;
+  letter-spacing:.04em;
+  color:#f0ede8;
   overflow:hidden;
-  border:3px solid var(--y);
-
-  animation:halo 3s ease-in-out infinite;
 }
-
-.avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+.hero-name .line{
+  display:block;
+  transform:translateY(110%);
+  animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards;
 }
-
-@keyframes halo{
-
-  0%,100%{
-    box-shadow:
-      0 0 0 8px rgba(255,212,59,.05),
-      0 0 40px rgba(255,212,59,.15);
-  }
-
-  50%{
-    box-shadow:
-      0 0 0 14px rgba(255,212,59,.1),
-      0 0 80px rgba(255,212,59,.25);
-  }
-}
-
-.chip{
-  display:inline-block;
-  margin-bottom:1rem;
-
-  padding:.4rem 1rem;
-
-  border-radius:100px;
-
-  background:rgba(255,212,59,.08);
-
-  border:1px solid rgba(255,212,59,.18);
-
-  color:var(--y);
-
-  font-family:'DM Mono',monospace;
-  font-size:.75rem;
-}
-
-.hero h1{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(3rem,8vw,5.5rem);
-  line-height:.95;
-  font-weight:800;
-}
-
-.hero h1 span{
-  color:var(--y);
-}
+.hero-name .line:nth-child(2){animation-delay:.08s;}
+.hero-name .line.gold{color:var(--gold);}
+@keyframes slideUp{to{transform:translateY(0);}}
 
 .hero-bio{
-  margin-top:1.5rem;
-  line-height:1.9;
-  color:#a0a0a0;
-  font-size:1rem;
-}
-
-.kw{
-  color:#fff;
-  font-weight:700;
-}
-
-.glow{
-  color:var(--y);
-  text-shadow:0 0 12px rgba(255,212,59,.55);
-}
-
-.pulse{
-  animation:pulseText 2s infinite;
-}
-
-.shine{
-  background:linear-gradient(90deg,#fff,#ffd43b,#fff);
-  background-size:200%;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation:shine 4s linear infinite;
-}
-
-@keyframes shine{
-  from{
-    background-position:0%;
-  }
-
-  to{
-    background-position:200%;
-  }
-}
-
-@keyframes pulseText{
-
-  0%,100%{
-    text-shadow:0 0 5px rgba(255,212,59,.2);
-  }
-
-  50%{
-    text-shadow:0 0 18px rgba(255,212,59,.7);
-  }
-}
-
-.hero-btns{
   margin-top:2rem;
-
-  display:flex;
-  justify-content:center;
-  gap:1rem;
-  flex-wrap:wrap;
+  font-size:.95rem;line-height:1.85;
+  color:#888;max-width:480px;
 }
-
-.btn{
-  padding:.9rem 1.5rem;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:700;
-  transition:.25s;
+.hero-bio .kw{
+  color:#f0ede8;font-weight:600;
+  background:linear-gradient(90deg,#fff5cc,var(--gold),#e8a812,var(--gold),#fff5cc);
+  background-size:280% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:kwFlow 3.5s linear infinite;
 }
+@keyframes kwFlow{to{background-position:280% center;}}
 
-.btn-y{
-  background:var(--y);
-  color:#000;
-}
-
-.btn-y:hover{
-  transform:translateY(-2px);
-  background:var(--g);
-}
-
-.btn-ghost{
-  border:1px solid rgba(255,212,59,.25);
-  color:#ddd;
-}
-
-.btn-ghost:hover{
-  background:rgba(255,212,59,.07);
-}
-
-/* SECTIONS */
-
-section{
-  position:relative;
-  z-index:2;
-}
-
-.sec{
-  max-width:1150px;
-  margin:auto;
-  padding:6rem 2rem;
-}
-
-.sec-chip{
-  color:var(--y);
-  font-family:'DM Mono',monospace;
-  font-size:.75rem;
-  letter-spacing:.14em;
-  margin-bottom:.6rem;
-}
-
-.sec-title{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(2rem,5vw,3rem);
-  margin-bottom:2rem;
-}
-
-/* CARDS */
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:1.2rem;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:1.5rem;
-  transition:.3s;
-  position:relative;
-  overflow:hidden;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-  border-color:rgba(255,212,59,.35);
-}
-
-.card-num{
-  color:rgba(255,212,59,.12);
-  font-size:2rem;
-  font-family:'DM Mono',monospace;
-  margin-bottom:.5rem;
-}
-
-.card h3{
-  color:var(--y);
-  margin-bottom:.6rem;
-  font-family:'Syne',sans-serif;
-}
-
-.card p{
-  color:#a9a9a9;
-  line-height:1.8;
-}
-
-/* TELEGRAPH */
-
-.telegraph-wrap{
-  margin-top:2rem;
-  padding:3rem 2rem;
-  border-radius:28px;
-
-  background:linear-gradient(160deg,#0f0f0f,#090909);
-
-  border:1px solid rgba(255,212,59,.1);
-
-  overflow:hidden;
-  position:relative;
-}
-
-.telegraph-wrap::before{
-  content:'';
-  position:absolute;
-  inset:0;
-
-  background-image:
-    linear-gradient(rgba(255,212,59,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,212,59,.03) 1px,transparent 1px);
-
-  background-size:40px 40px;
-}
-
-.tg-header{
-  text-align:center;
-  margin-bottom:2rem;
-  position:relative;
-  z-index:2;
-}
-
-.tg-header h3{
-  color:var(--y);
-  font-family:'DM Mono',monospace;
-  margin-bottom:.4rem;
-}
-
-.tg-header p{
-  color:#666;
-}
-
-/* PIPELINE */
-
-.pipeline{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  overflow-x:auto;
-
-  position:relative;
-  z-index:2;
-
-  padding-bottom:1rem;
-}
-
-.pipe-node{
-  flex-shrink:0;
-
-  width:150px;
-
-  background:rgba(255,255,255,.03);
-
-  border:1px solid rgba(255,212,59,.16);
-
-  border-radius:18px;
-
-  padding:1.4rem 1rem;
-
-  text-align:center;
-
-  transition:.3s;
-
-  position:relative;
-}
-
-.pipe-node:hover{
-  transform:scale(1.05);
-  border-color:rgba(255,212,59,.5);
-  background:rgba(255,212,59,.05);
-}
-
-.pipe-icon{
-  font-size:2rem;
-  margin-bottom:.7rem;
-  display:block;
-}
-
-.pipe-node h4{
-  color:var(--y);
-  font-family:'Syne',sans-serif;
-  margin-bottom:.5rem;
-}
-
-.pipe-node small{
-  color:#777;
-  line-height:1.5;
-}
-
-/* POPUPS */
-
-.pipe-popup{
-  position:absolute;
-
-  bottom:115%;
-  left:50%;
-
-  transform:translateX(-50%) translateY(10px);
-
-  width:220px;
-
-  background:#111;
-
-  border:1px solid rgba(255,212,59,.25);
-
-  border-radius:14px;
-
-  padding:1rem;
-
-  opacity:0;
-
-  pointer-events:none;
-
-  transition:.3s;
-
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
-}
-
-.pipe-popup h5{
-  color:var(--y);
-  margin-bottom:.4rem;
-  font-family:'Syne',sans-serif;
-}
-
-.pipe-popup p{
-  color:#999;
-  line-height:1.6;
-  font-size:.78rem;
-}
-
-.pipe-node:hover .pipe-popup{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-
-/* WIRES */
-
-.wire{
-  width:60px;
-  height:2px;
-  background:rgba(255,212,59,.15);
-  position:relative;
-  flex-shrink:0;
-}
-
-.wire::after{
-  content:'';
-
-  position:absolute;
-
-  width:20px;
-  height:4px;
-
-  top:-1px;
-
-  background:linear-gradient(to right,var(--y),transparent);
-
-  animation:shoot 1.8s linear infinite;
-}
-
-@keyframes shoot{
-
-  from{
-    transform:translateX(-20px);
-    opacity:0;
-  }
-
-  20%{
-    opacity:1;
-  }
-
-  80%{
-    opacity:1;
-  }
-
-  to{
-    transform:translateX(80px);
-    opacity:0;
-  }
-}
-
-/* BIT STREAM */
-
-.bit-stream{
+.hero-actions{
+  display:flex;align-items:center;gap:1rem;
   margin-top:2.5rem;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.8rem 1.6rem;border-radius:8px;
+  background:var(--gold);color:#000;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;font-weight:500;
+  letter-spacing:.06em;text-decoration:none;
+  border:none;cursor:none;
+  transition:background .2s,transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0);
+  transition:background .2s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,200,66,.3);}
+.btn-primary:hover::before{background:rgba(255,255,255,.12);}
 
-  height:42px;
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.8rem 1.6rem;border-radius:8px;
+  border:1px solid var(--borderG);
+  color:#aaa;background:transparent;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;letter-spacing:.06em;
+  text-decoration:none;cursor:none;
+  transition:border-color .2s,color .2s,transform .2s,background .2s;
+}
+.btn-secondary:hover{
+  border-color:var(--gold);color:#f0ede8;
+  background:var(--dim);transform:translateY(-2px);
+}
 
-  overflow:hidden;
-
-  border-radius:100px;
-
-  background:rgba(0,0,0,.4);
-
-  border:1px solid rgba(255,212,59,.08);
-
-  display:flex;
-  align-items:center;
-
+.hero-right{
+  display:flex;flex-direction:column;
+  align-items:center;gap:2rem;
+}
+.avatar-frame{
   position:relative;
-  z-index:2;
+  width:220px;height:220px;
+}
+.avatar-frame::before{
+  content:'';position:absolute;inset:-2px;
+  border-radius:50%;
+  background:conic-gradient(var(--gold),transparent,var(--gold2),transparent,var(--gold));
+  animation:spinGrad 6s linear infinite;
+}
+.avatar-frame::after{
+  content:'';position:absolute;inset:4px;
+  border-radius:50%;background:#050505;
+}
+@keyframes spinGrad{to{transform:rotate(360deg);}}
+.avatar-img{
+  position:absolute;inset:6px;z-index:2;
+  border-radius:50%;overflow:hidden;
+}
+.avatar-img img{width:100%;height:100%;object-fit:cover;}
+
+.hero-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;width:100%;max-width:300px;
+  background:var(--border);
+}
+.stat{
+  background:#050505;padding:1.2rem 1.4rem;
+  display:flex;flex-direction:column;gap:.3rem;
+}
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;color:var(--gold);letter-spacing:.04em;
+}
+.stat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;
 }
 
-.bits-track{
-  display:flex;
-  width:max-content;
-  animation:scrollBits 18s linear infinite;
+.section{position:relative;z-index:2;padding:8rem 6rem;}
+.section-inner{max-width:1200px;margin:auto;}
+.section-header{
+  display:flex;align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:3.5rem;
+  padding-bottom:1.5rem;
+  border-bottom:1px solid var(--border);
 }
-
-.bits{
-  display:flex;
-  white-space:nowrap;
+.section-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:6rem;color:rgba(245,200,66,.06);
+  line-height:1;position:absolute;top:-1rem;left:0;
+  user-select:none;pointer-events:none;
 }
-
-.bit{
-  font-family:'DM Mono',monospace;
-  font-size:.75rem;
-  padding:0 .2rem;
-  color:rgba(255,212,59,.45);
+.section-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;letter-spacing:.18em;
+  color:var(--gold);text-transform:uppercase;
+  margin-bottom:.5rem;
 }
-
-.bit.one{
-  color:var(--y);
-  font-weight:700;
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.4rem,4vw,3.6rem);
+  letter-spacing:.04em;line-height:1;
+  color:#f0ede8;
 }
+.section-title-wrap{position:relative;}
 
-@keyframes scrollBits{
-
-  from{
-    transform:translateX(0);
-  }
-
-  to{
-    transform:translateX(-50%);
-  }
-}
-
-/* OSI */
-
-.layers-row{
-  display:flex;
-  gap:1rem;
-  margin-top:2rem;
-  flex-wrap:wrap;
-}
-
-.layer-bar{
-  flex:1;
-  min-width:110px;
-
-  padding:.8rem .9rem;
-
-  border-radius:12px;
-
-  background:rgba(255,212,59,.04);
-
-  border-left:3px solid var(--y);
-}
-
-.layer-bar span{
-  color:var(--y);
-  font-weight:700;
-  display:block;
-  margin-bottom:.2rem;
-}
-
-.layer-bar small{
-  color:#666;
-}
-
-/* QUOTE */
-
-.quote-block{
-  border-left:3px solid var(--y);
-
-  background:rgba(255,212,59,.04);
-
-  padding:1.5rem;
-
-  border-radius:0 14px 14px 0;
-
-  line-height:1.9;
-
-  font-style:italic;
-
-  color:#ddd;
-}
-
-.reflection-body{
-  margin-top:1.5rem;
-  color:#aaa;
-  line-height:1.9;
-}
-
-/* VIDEO */
-
-.video-frame{
-  margin-top:2rem;
-
-  overflow:hidden;
-
-  border-radius:22px;
-
-  border:1px solid rgba(255,212,59,.15);
-}
-
-.video-frame iframe{
-  width:100%;
-  height:520px;
-  border:none;
-}
-
-/* RESOURCES */
-
-.resources-grid{
+.topics-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:1.2rem;
-}
-
-.res-card{
-  background:var(--card);
-
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
   border:1px solid var(--border);
-
-  border-radius:18px;
-
-  padding:1.5rem;
-
-  transition:.3s;
+  border-radius:20px;overflow:hidden;
+  background:var(--border);
+}
+.topic-card{
+  background:#080808;
+  padding:2rem 1.8rem 2.2rem;
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.topic-card::after{
+  content:'';position:absolute;
+  bottom:0;left:0;width:0;height:2px;
+  background:var(--gold);
+  transition:width .4s cubic-bezier(.25,.46,.45,.94);
+}
+.topic-card:hover{background:#0d0d0d;}
+.topic-card:hover::after{width:100%;}
+.topic-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:3.5rem;color:rgba(245,200,66,.07);
+  line-height:1;margin-bottom:.8rem;
+}
+.topic-title{
+  font-size:1.05rem;font-weight:600;
+  color:#f0ede8;margin-bottom:.6rem;
+}
+.topic-desc{font-size:.85rem;color:#666;line-height:1.7;}
+.topic-tag{
+  display:inline-block;margin-top:1rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.64rem;letter-spacing:.1em;
+  color:var(--gold);background:var(--dim);
+  padding:.25rem .6rem;border-radius:4px;
 }
 
-.res-card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(255,212,59,.4);
+/* ─── PIPELINE — fully modernized ─── */
+.pipeline-section{
+  position:relative;z-index:2;
+  padding:8rem 6rem;
+  overflow:hidden;
+}
+.pipeline-section::before{
+  content:'';position:absolute;
+  top:50%;left:50%;
+  width:700px;height:700px;
+  margin:-350px 0 0 -350px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(245,200,66,.04) 0%,transparent 70%);
+  pointer-events:none;
 }
 
-.res-card h4{
-  color:var(--y);
-  margin-bottom:.8rem;
-  font-family:'Syne',sans-serif;
+.pipeline-track{
+  display:flex;align-items:center;
+  gap:0;
+  margin-top:3rem;
+  position:relative;
+}
+.pipeline-track::before{
+  content:'';position:absolute;
+  top:50%;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--borderG),transparent);
+  transform:translateY(-50%);
+  z-index:0;
 }
 
-.res-card p{
-  color:#8f8f8f;
-  line-height:1.8;
+/* node redesign — glassy card with glow ring on hover */
+.p-node{
+  flex:1;position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  cursor:none;
+}
+.p-node-inner{
+  width:100%;max-width:148px;
+  background:linear-gradient(160deg,#0f0f0f,#080808);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:20px;
+  padding:1.4rem 1rem 1.2rem;
+  text-align:center;
+  transition:border-color .35s,background .35s,transform .35s,box-shadow .35s;
+  position:relative;overflow:hidden;
+}
+/* subtle top shimmer line */
+.p-node-inner::before{
+  content:'';position:absolute;
+  top:0;left:10%;width:80%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(245,200,66,.35),transparent);
+  opacity:0;transition:opacity .35s;
+}
+/* glow underline */
+.p-node-inner::after{
+  content:'';position:absolute;
+  bottom:0;left:0;width:0;height:2px;
+  background:var(--gold);border-radius:2px;
+  transition:width .4s cubic-bezier(.25,.46,.45,.94);
+}
+.p-node:hover .p-node-inner,
+.p-node.tapped .p-node-inner{
+  border-color:rgba(245,200,66,.4);
+  transform:translateY(-8px);
+  background:linear-gradient(160deg,#141410,#0c0c08);
+  box-shadow:0 0 0 1px rgba(245,200,66,.08),
+             0 24px 48px rgba(0,0,0,.6),
+             0 0 32px rgba(245,200,66,.07);
+}
+.p-node:hover .p-node-inner::before,
+.p-node.tapped .p-node-inner::before{opacity:1;}
+.p-node:hover .p-node-inner::after,
+.p-node.tapped .p-node-inner::after{width:100%;}
+
+/* icon pill */
+.p-icon-wrap{
+  width:44px;height:44px;border-radius:12px;
+  background:rgba(245,200,66,.07);
+  border:1px solid rgba(245,200,66,.12);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto .9rem;
+  transition:background .3s,border-color .3s,transform .3s;
+  font-size:1.35rem;
+}
+.p-node:hover .p-icon-wrap,
+.p-node.tapped .p-icon-wrap{
+  background:rgba(245,200,66,.13);
+  border-color:rgba(245,200,66,.3);
+  transform:scale(1.08) rotate(-3deg);
+}
+.p-label{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.05rem;letter-spacing:.1em;
+  color:#f0ede8;margin-bottom:.3rem;
+}
+.p-desc{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:#444;line-height:1.5;
+  letter-spacing:.04em;
+}
+.p-tap{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.55rem;color:rgba(245,200,66,.25);
+  letter-spacing:.14em;margin-top:.75rem;display:block;
+  transition:color .3s;
+}
+.p-node:hover .p-tap{color:rgba(245,200,66,.55);}
+
+/* step badge */
+.p-step{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.52rem;letter-spacing:.12em;
+  color:rgba(245,200,66,.35);
+  position:absolute;top:.65rem;right:.75rem;
+}
+
+.p-connector{
+  width:36px;flex-shrink:0;
+  height:1px;background:var(--borderG);
+  position:relative;z-index:0;
+}
+.p-connector::after{
+  content:'';position:absolute;
+  top:-2px;left:0;
+  width:12px;height:5px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  animation:flowDot 2s linear infinite;
+  border-radius:3px;
+}
+@keyframes flowDot{
+  from{transform:translateX(-12px);opacity:0;}
+  15%{opacity:1;}85%{opacity:1;}
+  to{transform:translateX(48px);opacity:0;}
+}
+
+.bit-river{
+  margin-top:2.5rem;
+  height:36px;border-radius:100px;
+  background:#080808;border:1px solid var(--border);
+  display:flex;align-items:center;
+  overflow:hidden;position:relative;
+}
+.bit-river::before,.bit-river::after{
+  content:'';position:absolute;
+  top:0;bottom:0;width:60px;z-index:2;
+}
+.bit-river::before{left:0;background:linear-gradient(90deg,#080808,transparent);}
+.bit-river::after{right:0;background:linear-gradient(270deg,#080808,transparent);}
+.bits-wrap{display:flex;width:max-content;animation:riverFlow 20s linear infinite;}
+.bits-set{display:flex;white-space:nowrap;}
+.bbit{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;padding:0 .18rem;
+  color:rgba(245,200,66,.3);
+}
+.bbit.on{color:var(--gold);}
+
+.osi-grid{
+  display:flex;gap:.6rem;margin-top:2rem;flex-wrap:wrap;
+}
+.osi-layer{
+  flex:1;min-width:100px;
+  padding:.9rem 1rem;
+  border-radius:10px;
+  background:#080808;
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:border-color .3s,background .3s;
+}
+.osi-layer:hover{border-color:var(--gold);background:#0d0d0d;}
+.osi-layer::before{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.osi-layer:hover::before{opacity:1;}
+.osi-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1rem;letter-spacing:.06em;
+  color:#f0ede8;margin-bottom:.3rem;
+  display:block;
+}
+.osi-proto{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:#444;letter-spacing:.06em;
+}
+
+/* ─── MODAL — wider, more dramatic ─── */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.88);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all;}
+
+.modal-card{
+  background:#060608;
+  border:1px solid rgba(245,200,66,.22);
+  border-radius:28px;
+  max-width:520px;width:100%;
+  overflow:hidden;
+  transform:translateY(28px) scale(.96);
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+  opacity:0;
+  box-shadow:0 40px 80px rgba(0,0,0,.7),0 0 60px rgba(245,200,66,.04);
+}
+.modal-backdrop.open .modal-card{
+  transform:translateY(0) scale(1);opacity:1;
+}
+
+.modal-anim{
+  width:100%;height:180px;
+  background:#030305;
+  border-bottom:1px solid rgba(245,200,66,.08);
+  position:relative;overflow:hidden;
+}
+.modal-anim canvas{display:block;width:100%;height:100%;}
+
+/* tiny progress bar under anim area */
+.modal-anim::after{
+  content:'';position:absolute;bottom:0;left:0;
+  height:2px;width:100%;
+  background:linear-gradient(90deg,transparent,rgba(245,200,66,.4),transparent);
+  animation:scanBar 3s ease-in-out infinite;
+}
+@keyframes scanBar{
+  0%{transform:scaleX(0);transform-origin:left;}
+  50%{transform:scaleX(1);transform-origin:left;}
+  51%{transform:scaleX(1);transform-origin:right;}
+  100%{transform:scaleX(0);transform-origin:right;}
+}
+
+.modal-content{padding:1.8rem 2rem 2.2rem;}
+.modal-header{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;gap:1rem;
   margin-bottom:1rem;
 }
-
-.res-card a{
-  display:inline-block;
-
-  padding:.6rem 1rem;
-
-  border-radius:10px;
-
-  background:rgba(255,212,59,.1);
-
-  border:1px solid rgba(255,212,59,.2);
-
-  text-decoration:none;
-
-  color:var(--y);
-
-  font-family:'DM Mono',monospace;
+.modal-ttl{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.7rem;letter-spacing:.07em;color:var(--gold);
+}
+.modal-step{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;color:#333;letter-spacing:.14em;
+  margin-top:.18rem;
+}
+.modal-close-btn{
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;
+  color:#666;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;flex-shrink:0;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.modal-close-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--dim);}
+.modal-body-text{
+  font-size:.88rem;color:#666;line-height:1.95;
 }
 
-/* FOOTER */
+.reflection-section{
+  position:relative;z-index:2;
+  padding:8rem 6rem;
+}
+.quote-wrap{
+  border-left:3px solid var(--gold);
+  padding:2rem 2.5rem;
+  background:var(--dimb);
+  border-radius:0 16px 16px 0;
+  position:relative;
+}
+.quote-wrap::before{
+  content:'"';
+  font-family:'Bebas Neue',sans-serif;
+  font-size:8rem;color:rgba(245,200,66,.07);
+  position:absolute;top:-1rem;left:1rem;
+  line-height:1;pointer-events:none;
+}
+.quote-text{
+  font-size:1.2rem;line-height:1.8;color:#d0cdc8;
+  font-style:italic;position:relative;z-index:1;
+}
+.reflection-text{
+  margin-top:2rem;font-size:.95rem;
+  color:#666;line-height:1.9;
+  max-width:720px;
+}
+
+.video-section{position:relative;z-index:2;padding:8rem 6rem;}
+.video-wrap{
+  border-radius:20px;overflow:hidden;
+  border:1px solid var(--border);
+  position:relative;
+}
+.video-wrap::before{
+  content:'';position:absolute;
+  inset:-1px;border-radius:20px;z-index:1;pointer-events:none;
+  background:linear-gradient(135deg,rgba(245,200,66,.15),transparent 50%,rgba(245,200,66,.08));
+}
+.video-wrap iframe{display:block;width:100%;height:520px;border:none;}
+
+.resources-section{position:relative;z-index:2;padding:8rem 6rem;}
+.resources-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+}
+.res-card{
+  padding:2rem;border-radius:16px;
+  background:#080808;border:1px solid var(--border);
+  transition:border-color .3s,transform .3s,background .3s;
+  position:relative;overflow:hidden;
+}
+.res-card::after{
+  content:'';position:absolute;
+  top:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle at top right,rgba(245,200,66,.06),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.res-card:hover{
+  border-color:rgba(245,200,66,.35);
+  transform:translateY(-4px);background:#0a0a0a;
+}
+.res-card:hover::after{opacity:1;}
+.res-icon{
+  font-size:1.5rem;margin-bottom:1.2rem;
+  display:block;filter:grayscale(.3);
+}
+.res-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem;letter-spacing:.06em;
+  color:#f0ede8;margin-bottom:.6rem;
+}
+.res-desc{font-size:.83rem;color:#555;line-height:1.75;margin-bottom:1.2rem;}
+.res-link{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.08em;
+  color:var(--gold);text-decoration:none;
+  padding:.45rem .9rem;border-radius:6px;
+  border:1px solid rgba(245,200,66,.2);
+  background:var(--dim);
+  transition:background .2s,border-color .2s;
+}
+.res-link:hover{background:rgba(245,200,66,.18);border-color:var(--gold);}
+
+.conclusion-section{
+  position:relative;z-index:2;
+  padding:8rem 6rem 10rem;
+  text-align:center;
+}
+.conclusion-inner{
+  max-width:760px;margin:auto;
+}
+.conclusion-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;
+  margin-bottom:1.2rem;
+}
+.conclusion-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  letter-spacing:.05em;line-height:1;
+  color:#f0ede8;margin-bottom:1.8rem;
+}
+.conclusion-body{
+  font-size:.95rem;color:#555;
+  line-height:1.95;margin-bottom:2.5rem;
+}
+.conclusion-actions{
+  display:flex;justify-content:center;
+  gap:1rem;flex-wrap:wrap;
+}
 
 footer{
-  position:relative;
-  z-index:2;
-
-  text-align:center;
-
-  padding:2.5rem 1rem;
-
-  border-top:1px solid rgba(255,255,255,.05);
-
-  color:#666;
+  position:relative;z-index:2;
+  border-top:1px solid var(--border);
+  padding:2rem 6rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-left{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;color:#333;letter-spacing:.08em;
+}
+.footer-right{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;color:#333;letter-spacing:.08em;
 }
 
-footer p:last-child{
-  margin-top:1rem;
-  color:#444;
-  font-size:.75rem;
-  letter-spacing:.08em;
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);
 }
+.reveal.visible{opacity:1;transform:translateY(0);}
 
-/* MOBILE */
-
-@media(max-width:768px){
-
-  nav{
-    flex-direction:column;
-    gap:.8rem;
-  }
-
-  .nav-links{
-    justify-content:center;
-  }
-
-  .hero{
-    padding:10rem 1.2rem 4rem;
-  }
-
-  .avatar{
-    width:120px;
-    height:120px;
-  }
-
-  .hero-btns{
-    flex-direction:column;
-    align-items:center;
-  }
-
-  .btn{
-    width:100%;
-    max-width:320px;
-    text-align:center;
-  }
-
-  .sec{
-    padding:4rem 1.1rem;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .resources-grid{
-    grid-template-columns:1fr;
-  }
-
-  .layers-row{
-    flex-direction:column;
-  }
-
-  .video-frame iframe{
-    height:220px;
-  }
-
-  .pipe-node{
-    width:130px;
-  }
-
-  .wire{
-    width:35px;
-  }
-
-  .pipe-popup{
-    position:relative;
-    opacity:1;
-    pointer-events:auto;
-    width:100%;
-    left:auto;
-    bottom:auto;
-    transform:none;
-    margin-top:1rem;
-  }
-
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding:6rem 2rem 4rem;text-align:center;gap:3rem;}
+  .hero-left{display:flex;flex-direction:column;align-items:center;}
+  .hero-bio{text-align:left;}
+  .hero-right{order:-1;}
+  .section,.pipeline-section,.reflection-section,.video-section,.resources-section,.conclusion-section{padding:5rem 1.5rem;}
+  .topics-grid{grid-template-columns:1fr;}
+  .resources-grid{grid-template-columns:1fr;}
+  .pipeline-track{flex-direction:column;gap:1rem;}
+  .p-connector{width:1px;height:30px;background:var(--borderG);}
+  .p-connector::after{width:5px;left:-2px;height:20px;top:0;background:linear-gradient(180deg,var(--gold),transparent);animation:flowDotV 2s linear infinite;}
+  @keyframes flowDotV{from{transform:translateY(-10px);opacity:0;}15%{opacity:1;}85%{opacity:1;}to{transform:translateY(40px);opacity:0;}}
+  .footer{flex-direction:column;padding:1.5rem;text-align:center;}
+  .section-header{flex-direction:column;align-items:flex-start;gap:.5rem;}
+  .osi-grid{flex-wrap:wrap;}
+  .osi-layer{min-width:80px;}
+  body{cursor:auto;}
+  #cursor,#cursor-ring{display:none;}
+  .video-wrap iframe{height:240px;}
 }
-
 </style>
 </head>
-
 <body>
 
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 <canvas id="bg-canvas"></canvas>
 
-<!-- NAV -->
-
-<nav>
-
-<div class="logo">
-DATA COMMS
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBg">
+  <div class="modal-card" id="modalCard">
+    <div class="modal-anim">
+      <canvas id="animCanvas" width="520" height="180"></canvas>
+    </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <div class="modal-ttl" id="mTitle"></div>
+          <div class="modal-step" id="mStep"></div>
+        </div>
+        <button class="modal-close-btn" id="mClose">✕</button>
+      </div>
+      <div class="modal-body-text" id="mDesc"></div>
+    </div>
+  </div>
 </div>
 
-<ul class="nav-links">
-<li><a href="#home">Home</a></li>
-<li><a href="#topics">Topics</a></li>
-<li><a href="#telegraph">Comm Flow</a></li>
-<li><a href="#reflection">Reflection</a></li>
-<li><a href="#video">Video</a></li>
-<li><a href="#resources">Resources</a></li>
-</ul>
-
+<!-- NAV -->
+<nav>
+  <div class="logo-mark">DATA/COMMS</div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#topics">Topics</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#reflection">Reflection</a></li>
+    <li><a href="#video">Video</a></li>
+    <li><a href="#resources">Resources</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-status"><div class="status-dot"></div><span>PUIS/25120003</span></div>
+  </div>
 </nav>
 
 <!-- HERO -->
-
 <section class="hero" id="home">
-
-<div class="hero-content">
-
-<div class="avatar">
-<img src="sam.jpg" alt="Samuel Osei Nyampong">
-</div>
-
-<div class="chip">
-PUIS/25120003 · ISE · DATA COMMUNICATIONS
-</div>
-
-<h1>
-Samuel Osei<br>
-<span>Nyampong</span>
-</h1>
-
-<p class="hero-bio">
-
-A <span class="kw">Level 200</span> student at
-<span class="kw glow">Pentecost University</span>
-pursuing
-<span class="kw">Industrial Software Engineering</span>
-who is driven by the goal of building
-<span class="kw pulse">software systems</span>
-that are
-<span class="kw shine">reliable</span>,
-<span class="kw shine">efficient</span>,
-and never disappoint.
-
-I'm constantly sharpening my understanding of
-<span class="kw">communication systems</span>,
-architecture, and modern technologies so I can develop solutions with
-<span class="kw pulse">precision</span>,
-<span class="kw glow">confidence</span>,
-and real-world impact.
-
-</p>
-
-<div class="hero-btns">
-
-<a href="https://github.com/samzei19/data-communication-web-project"
-target="_blank"
-class="btn btn-y">
-Project Repository ↗
-</a>
-
-<a href="#topics" class="btn btn-ghost">
-Explore Topics
-</a>
-
-</div>
-
-</div>
-
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Industrial Software Engineering · Level 200</span>
+    </div>
+    <h1 class="hero-name">
+      <span class="line">SAMUEL</span>
+      <span class="line">OSEI</span>
+      <span class="line gold">NYAMPONG</span>
+    </h1>
+    <p class="hero-bio">
+      A <span class="kw">Level 200</span> student at <span class="kw">Pentecost University</span> pursuing <span class="kw">Industrial Software Engineering</span> — driven by the goal of building <span class="kw">software systems</span> that are <span class="kw">reliable</span>, <span class="kw">efficient</span>, and never disappoint. Sharpening understanding of <span class="kw">communication systems</span>, architecture, and modern technologies to develop solutions with <span class="kw">precision</span>, <span class="kw">confidence</span>, and real-world impact.
+    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/samzei19/data-communication-web-project" target="_blank" class="btn-primary">Repository ↗</a>
+      <a href="#topics" class="btn-secondary">Explore Topics</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="avatar-frame">
+      <div class="avatar-img"><img src="sam.jpg" alt="Samuel Osei Nyampong"/></div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Topics Covered</div></div>
+      <div class="stat"><div class="stat-num">L2</div><div class="stat-label">Current Level</div></div>
+      <div class="stat"><div class="stat-num">ISE</div><div class="stat-label">Programme</div></div>
+      <div class="stat"><div class="stat-num">PU</div><div class="stat-label">University</div></div>
+    </div>
+  </div>
 </section>
 
 <!-- TOPICS -->
-
-<section id="topics">
-
-<div class="sec">
-
-<div class="sec-chip">
-Course Content
-</div>
-
-<h2 class="sec-title">
-A Summary of What I've Studied
-</h2>
-
-<div class="grid">
-
-<div class="card">
-<div class="card-num">01</div>
-<h3>Signals & Data</h3>
-<p>How data is represented and transmitted using analog and digital signals.</p>
-</div>
-
-<div class="card">
-<div class="card-num">02</div>
-<h3>Transmission Media</h3>
-<p>Understanding fibre optics, wireless communication and reliable data transport.</p>
-</div>
-
-<div class="card">
-<div class="card-num">03</div>
-<h3>Error Detection</h3>
-<p>Learning how communication systems detect and correct transmission errors.</p>
-</div>
-
-<div class="card">
-<div class="card-num">04</div>
-<h3>Network Models</h3>
-<p>The OSI and TCP/IP models and how communication is layered systematically.</p>
-</div>
-
-<div class="card">
-<div class="card-num">05</div>
-<h3>Flow Control</h3>
-<p>Managing communication traffic to avoid collisions and transmission issues.</p>
-</div>
-
-<div class="card">
-<div class="card-num">06</div>
-<h3>Communication History</h3>
-<p>Understanding how communication evolved from telegraphs to modern networking.</p>
-</div>
-
-</div>
-
-</div>
-
+<section class="section" id="topics">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-title-wrap">
+        <div class="section-num">01</div>
+        <div class="section-tag">Course Content</div>
+        <h2 class="section-title">What I've Studied</h2>
+      </div>
+    </div>
+    <div class="topics-grid reveal">
+      <div class="topic-card">
+        <div class="topic-num">01</div>
+        <div class="topic-title">Signals & Data</div>
+        <div class="topic-desc">How data is represented and transmitted using analog and digital signals.</div>
+        <span class="topic-tag">ANALOG · DIGITAL</span>
+      </div>
+      <div class="topic-card">
+        <div class="topic-num">02</div>
+        <div class="topic-title">Transmission Media</div>
+        <div class="topic-desc">Understanding fibre optics, wireless communication and reliable data transport.</div>
+        <span class="topic-tag">FIBRE · WIRELESS</span>
+      </div>
+      <div class="topic-card">
+        <div class="topic-num">03</div>
+        <div class="topic-title">Error Detection</div>
+        <div class="topic-desc">Learning how communication systems detect and correct transmission errors.</div>
+        <span class="topic-tag">CRC · PARITY</span>
+      </div>
+      <div class="topic-card">
+        <div class="topic-num">04</div>
+        <div class="topic-title">Network Models</div>
+        <div class="topic-desc">The OSI and TCP/IP models and how communication is layered systematically.</div>
+        <span class="topic-tag">OSI · TCP/IP</span>
+      </div>
+      <div class="topic-card">
+        <div class="topic-num">05</div>
+        <div class="topic-title">Flow Control</div>
+        <div class="topic-desc">Managing communication traffic to avoid collisions and transmission issues.</div>
+        <span class="topic-tag">CSMA · ARQ</span>
+      </div>
+      <div class="topic-card">
+        <div class="topic-num">06</div>
+        <div class="topic-title">Comm History</div>
+        <div class="topic-desc">How communication evolved from telegraphs to modern global networking.</div>
+        <span class="topic-tag">TELEGRAPH · 5G</span>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- TELEGRAPH -->
+<!-- PIPELINE -->
+<section class="pipeline-section" id="pipeline">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-title-wrap">
+        <div class="section-num">02</div>
+        <div class="section-tag">System Communication</div>
+        <h2 class="section-title">Data Pipeline</h2>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:#333;letter-spacing:.1em;text-align:right;">
+        TAP ANY NODE TO EXPLORE
+      </div>
+    </div>
 
-<section id="telegraph">
+    <div class="pipeline-track reveal">
+      <div class="p-node" data-node="source">
+        <div class="p-node-inner">
+          <span class="p-step">01</span>
+          <div class="p-icon-wrap">🖥️</div>
+          <div class="p-label">Source</div>
+          <div class="p-desc">Raw data generated</div>
+          <span class="p-tap">[ TAP ]</span>
+        </div>
+      </div>
+      <div class="p-connector"></div>
+      <div class="p-node" data-node="encoder">
+        <div class="p-node-inner">
+          <span class="p-step">02</span>
+          <div class="p-icon-wrap">⚡</div>
+          <div class="p-label">Encoder</div>
+          <div class="p-desc">Bits become signals</div>
+          <span class="p-tap">[ TAP ]</span>
+        </div>
+      </div>
+      <div class="p-connector"></div>
+      <div class="p-node" data-node="network">
+        <div class="p-node-inner">
+          <span class="p-step">03</span>
+          <div class="p-icon-wrap">🌐</div>
+          <div class="p-label">Network</div>
+          <div class="p-desc">Packets routed</div>
+          <span class="p-tap">[ TAP ]</span>
+        </div>
+      </div>
+      <div class="p-connector"></div>
+      <div class="p-node" data-node="decoder">
+        <div class="p-node-inner">
+          <span class="p-step">04</span>
+          <div class="p-icon-wrap">📡</div>
+          <div class="p-label">Decoder</div>
+          <div class="p-desc">Signals restored</div>
+          <span class="p-tap">[ TAP ]</span>
+        </div>
+      </div>
+      <div class="p-connector"></div>
+      <div class="p-node" data-node="destination">
+        <div class="p-node-inner">
+          <span class="p-step">05</span>
+          <div class="p-icon-wrap">📲</div>
+          <div class="p-label">Destination</div>
+          <div class="p-desc">Message delivered</div>
+          <span class="p-tap">[ TAP ]</span>
+        </div>
+      </div>
+    </div>
 
-<div class="sec">
+    <div class="bit-river reveal">
+      <div class="bits-wrap">
+        <div class="bits-set" id="bset1"></div>
+        <div class="bits-set" id="bset2"></div>
+      </div>
+    </div>
 
-<div class="sec-chip">
-System Communication
-</div>
-
-<h2 class="sec-title">
-Modern Communication Flow
-</h2>
-
-<div class="telegraph-wrap">
-
-<div class="tg-header">
-<h3>Live Data Pipeline Simulation</h3>
-<p>Hover over any node to inspect it</p>
-</div>
-
-<div class="pipeline">
-
-<div class="pipe-node">
-
-<span class="pipe-icon">🖥️</span>
-
-<h4>Source</h4>
-
-<small>User device generates raw data</small>
-
-<div class="pipe-popup">
-<h5>Source System</h5>
-<p>
-The sender creates the original message before communication begins.
-</p>
-</div>
-
-</div>
-
-<div class="wire"></div>
-
-<div class="pipe-node">
-
-<span class="pipe-icon">⚡</span>
-
-<h4>Encoder</h4>
-
-<small>Data converted into signals</small>
-
-<div class="pipe-popup">
-<h5>Signal Encoding</h5>
-<p>
-The encoder transforms digital information into transmittable signals.
-</p>
-</div>
-
-</div>
-
-<div class="wire"></div>
-
-<div class="pipe-node">
-
-<span class="pipe-icon">🌐</span>
-
-<h4>Network</h4>
-
-<small>Routers and channels carry data</small>
-
-<div class="pipe-popup">
-<h5>Packet Routing</h5>
-<p>
-Network devices route packets through communication channels.
-</p>
-</div>
-
-</div>
-
-<div class="wire"></div>
-
-<div class="pipe-node">
-
-<span class="pipe-icon">📡</span>
-
-<h4>Decoder</h4>
-
-<small>Signals restored into data</small>
-
-<div class="pipe-popup">
-<h5>Signal Reconstruction</h5>
-<p>
-The decoder converts transmitted signals back into readable data.
-</p>
-</div>
-
-</div>
-
-<div class="wire"></div>
-
-<div class="pipe-node">
-
-<span class="pipe-icon">📲</span>
-
-<h4>Destination</h4>
-
-<small>Receiver processes the message</small>
-
-<div class="pipe-popup">
-<h5>End User Device</h5>
-<p>
-The destination receives and displays the transmitted information.
-</p>
-</div>
-
-</div>
-
-</div>
-
-<!-- BITSTREAM -->
-
-<div class="bit-stream">
-
-<div class="bits-track">
-
-<div class="bits" id="bits"></div>
-
-<div class="bits" id="bits2"></div>
-
-</div>
-
-</div>
-
-<!-- OSI -->
-
-<div class="layers-row">
-
-<div class="layer-bar">
-<span>Application</span>
-<small>HTTP · FTP · SMTP</small>
-</div>
-
-<div class="layer-bar">
-<span>Presentation</span>
-<small>Encryption · Compression</small>
-</div>
-
-<div class="layer-bar">
-<span>Session</span>
-<small>Session Management</small>
-</div>
-
-<div class="layer-bar">
-<span>Transport</span>
-<small>TCP · UDP</small>
-</div>
-
-<div class="layer-bar">
-<span>Network</span>
-<small>IP · Routing</small>
-</div>
-
-<div class="layer-bar">
-<span>Data Link</span>
-<small>Frames · MAC</small>
-</div>
-
-<div class="layer-bar">
-<span>Physical</span>
-<small>Cables · Signals</small>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+    <div class="osi-grid reveal">
+      <div class="osi-layer"><span class="osi-name">Application</span><span class="osi-proto">HTTP · FTP · SMTP</span></div>
+      <div class="osi-layer"><span class="osi-name">Presentation</span><span class="osi-proto">Encryption · ZIP</span></div>
+      <div class="osi-layer"><span class="osi-name">Session</span><span class="osi-proto">Session Mgmt</span></div>
+      <div class="osi-layer"><span class="osi-name">Transport</span><span class="osi-proto">TCP · UDP</span></div>
+      <div class="osi-layer"><span class="osi-name">Network</span><span class="osi-proto">IP · Routing</span></div>
+      <div class="osi-layer"><span class="osi-name">Data Link</span><span class="osi-proto">Frames · MAC</span></div>
+      <div class="osi-layer"><span class="osi-name">Physical</span><span class="osi-proto">Cables · Signals</span></div>
+    </div>
+  </div>
 </section>
 
 <!-- REFLECTION -->
-
-<section id="reflection">
-
-<div class="sec">
-
-<div class="sec-chip">
-Personal Reflection
-</div>
-
-<h2 class="sec-title">
-Why This Course Stands Out
-</h2>
-
-<div class="quote-block">
-
-"I've come to understand that communication technology is one of those things most people use every day without realizing the systems operating underneath."
-
-</div>
-
-<p class="reflection-body">
-
-Studying Data Communications helped me appreciate the engineering,
-infrastructure and layered systems that make global connectivity possible.
-
-As an Industrial Software Engineering student,
-the course strengthened my understanding of how software integrates with real-world communication systems.
-
-</p>
-
-</div>
-
+<section class="reflection-section" id="reflection">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-title-wrap">
+        <div class="section-num">03</div>
+        <div class="section-tag">Personal Reflection</div>
+        <h2 class="section-title">Why This Stands Out</h2>
+      </div>
+    </div>
+    <div class="quote-wrap reveal">
+      <p class="quote-text">"I've come to understand that communication technology is one of those things most people use every day without realizing the systems operating underneath."</p>
+    </div>
+    <p class="reflection-text reveal">
+      Studying Data Communications helped me appreciate the engineering, infrastructure and layered systems that make global connectivity possible. As an Industrial Software Engineering student, the course strengthened my understanding of how software integrates with real-world communication systems.
+    </p>
+  </div>
 </section>
 
 <!-- VIDEO -->
-
-<section id="video">
-
-<div class="sec">
-
-<div class="sec-chip">
-Learning Resource
-</div>
-
-<h2 class="sec-title">
-The Telegraph Overview
-</h2>
-
-<div class="video-frame">
-
-<iframe
-src="https://www.youtube.com/embed/y-h9tD-ear4"
-allowfullscreen>
-</iframe>
-
-</div>
-
-</div>
-
+<section class="video-section" id="video">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-title-wrap">
+        <div class="section-num">04</div>
+        <div class="section-tag">Learning Resource</div>
+        <h2 class="section-title">The Telegraph Overview</h2>
+      </div>
+    </div>
+    <div class="video-wrap reveal">
+      <iframe src="https://www.youtube.com/embed/y-h9tD-ear4" allowfullscreen></iframe>
+    </div>
+  </div>
 </section>
 
 <!-- RESOURCES -->
-
-<section id="resources">
-
-<div class="sec">
-
-<div class="sec-chip">
-Resources
-</div>
-
-<h2 class="sec-title">
-Assignment & References
-</h2>
-
-<div class="resources-grid">
-
-<div class="res-card">
-
-<h4>Assignment Document</h4>
-
-<p>
-A copy of the submitted course assignment document.
-</p>
-
-<a
-href="https://github.com/samzei19/data-communication-web-project/blob/main/Study_on_Satellite_Communication_PUIS25120003.pdf"
-target="_blank">
-View Assignment ↗
-</a>
-
-</div>
-
-<div class="res-card">
-
-<h4>GitHub Repository</h4>
-
-<p>
-Full source code and project assets hosted on GitHub.
-</p>
-
-<a
-href="https://github.com/samzei19/data-communication-web-project"
-target="_blank">
-Open Repository ↗
-</a>
-
-</div>
-
-<div class="res-card">
-
-<h4>Telegraph Video</h4>
-
-<p>
-Embedded educational video resource on communication systems.
-</p>
-
-<a href="#video">
-Watch Video ↑
-</a>
-
-</div>
-
-</div>
-
-</div>
-
+<section class="resources-section" id="resources">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-title-wrap">
+        <div class="section-num">05</div>
+        <div class="section-tag">References</div>
+        <h2 class="section-title">Assignment & Links</h2>
+      </div>
+    </div>
+    <div class="resources-grid reveal">
+      <div class="res-card">
+        <span class="res-icon">📄</span>
+        <div class="res-title">Assignment Document</div>
+        <div class="res-desc">A copy of the submitted course assignment on Satellite Communication.</div>
+        <a href="https://github.com/samzei19/data-communication-web-project/blob/main/Study_on_Satellite_Communication_PUIS25120003.pdf" target="_blank" class="res-link">View PDF ↗</a>
+      </div>
+      <div class="res-card">
+        <span class="res-icon">⌨️</span>
+        <div class="res-title">GitHub Repository</div>
+        <div class="res-desc">Full source code and all project assets hosted openly on GitHub.</div>
+        <a href="https://github.com/samzei19/data-communication-web-project" target="_blank" class="res-link">Open Repo ↗</a>
+      </div>
+      <div class="res-card">
+        <span class="res-icon">▶️</span>
+        <div class="res-title">Telegraph Video</div>
+        <div class="res-desc">Embedded educational video resource on the history of communication systems.</div>
+        <a href="#video" class="res-link">Watch ↑</a>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- CONCLUSION -->
-
-<section id="conclusion">
-
-<div class="sec">
-
-<div class="telegraph-wrap" style="text-align:center;">
-
-<div class="sec-chip">
-Final Thoughts
-</div>
-
-<h2 class="sec-title">
-Communication Powers The Modern World
-</h2>
-
-<p style="
-max-width:760px;
-margin:auto;
-line-height:1.9;
-color:#8d8d8d;
-">
-
-Data Communications has shown me how interconnected software,
-networking, infrastructure and digital systems truly are.
-
-The course strengthened my understanding of how reliable communication systems are engineered to support businesses,
-education and global connectivity.
-
-As an Industrial Software Engineering student,
-this knowledge forms part of the foundation required to build scalable,
-efficient and dependable systems in the future.
-
-</p>
-
-<div style="
-margin-top:2rem;
-display:flex;
-justify-content:center;
-gap:1rem;
-flex-wrap:wrap;
-">
-
-<a href="#home" class="btn btn-y">
-Back To Top ↑
-</a>
-
-<a
-href="https://github.com/samzei19/data-communication-web-project"
-target="_blank"
-class="btn btn-ghost">
-View Repository
-</a>
-
-</div>
-
-</div>
-
-</div>
-
+<section class="conclusion-section" id="conclusion">
+  <div class="conclusion-inner reveal">
+    <div class="conclusion-label">Final Thoughts</div>
+    <h2 class="conclusion-title">Communication Powers The Modern World</h2>
+    <p class="conclusion-body">Data Communications has shown me how interconnected software, networking, infrastructure and digital systems truly are. The course strengthened my understanding of how reliable communication systems are engineered to support businesses, education and global connectivity. As an Industrial Software Engineering student, this knowledge forms part of the foundation required to build scalable, efficient and dependable systems in the future.</p>
+    <div class="conclusion-actions">
+      <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="btn-primary">Back to Top ↑</button>
+      <a href="https://github.com/samzei19/data-communication-web-project" target="_blank" class="btn-secondary">View Repository ↗</a>
+    </div>
+  </div>
 </section>
 
-<!-- FOOTER -->
-
 <footer>
-
-<p>
-Samuel Osei Nyampong · PUIS/25120003
-</p>
-
-<p>
-Industrial Software Engineering · Pentecost University
-</p>
-
-<p>
-DATA COMMUNICATIONS PORTFOLIO © 2026
-</p>
-
+  <div class="footer-left">SAMUEL OSEI NYAMPONG · PUIS/25120003 · PENTECOST UNIVERSITY</div>
+  <div class="footer-right">DATA COMMUNICATIONS PORTFOLIO © 2026</div>
 </footer>
 
 <script>
+/* ─── CURSOR ─── */
+const cur=document.getElementById('cursor');
+const curR=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+function animCursor(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  curR.style.left=rx+'px';curR.style.top=ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('a,button,.p-node,.res-card,.topic-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.transform='translate(-50%,-50%) scale(1.8)';
+    curR.style.transform='translate(-50%,-50%) scale(1.4)';
+    curR.style.borderColor='rgba(245,200,66,.7)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.style.transform='translate(-50%,-50%) scale(1)';
+    curR.style.transform='translate(-50%,-50%) scale(1)';
+    curR.style.borderColor='rgba(245,200,66,.4)';
+  });
+});
 
-/* BACKGROUND NETWORK */
+/* ─── BG NETWORK ─── */
+const bgC=document.getElementById('bg-canvas');
+const bgX=bgC.getContext('2d');
+let W,H;
+function rsz(){W=bgC.width=window.innerWidth;H=bgC.height=window.innerHeight;}
+rsz();window.addEventListener('resize',rsz);
+const pts=Array.from({length:60},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.5+.5}));
+function bgLoop(){
+  bgX.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<140){bgX.beginPath();bgX.strokeStyle=`rgba(245,200,66,${.09*(1-d/140)})`;bgX.lineWidth=.5;bgX.moveTo(pts[i].x,pts[i].y);bgX.lineTo(pts[j].x,pts[j].y);bgX.stroke();}
+  }
+  pts.forEach(p=>{bgX.beginPath();bgX.arc(p.x,p.y,p.r,0,Math.PI*2);bgX.fillStyle='rgba(245,200,66,.28)';bgX.fill();});
+  requestAnimationFrame(bgLoop);
+}
+bgLoop();
 
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
+/* ─── BITSTREAM ─── */
+const bstr=Array.from({length:160},()=>Math.round(Math.random())).map(b=>`<span class="bbit ${b?'on':''}">${b}</span>`).join('');
+document.getElementById('bset1').innerHTML=bstr;
+document.getElementById('bset2').innerHTML=bstr;
 
-let W,H,nodes=[];
+/* ─── REVEAL ─── */
+const revEls=document.querySelectorAll('.reveal');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);}
+  });
+},{threshold:.1});
+revEls.forEach(el=>revObs.observe(el));
 
-function resize(){
+/* ═══════════════════════════════════════
+   NODE ANIMATION SCENES — pure elements
+   No stickmen. Data, signals, circuits.
+═══════════════════════════════════════ */
+const Y='#f5c842';
+const DIM='rgba(245,200,66,';
+const ac=document.getElementById('animCanvas').getContext('2d');
+const W2=520,H2=180;
+function clearA(){ac.clearRect(0,0,W2,H2);}
 
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
+/* shared: faint grid backdrop */
+function drawGrid(){
+  ac.strokeStyle='rgba(245,200,66,.03)';ac.lineWidth=.5;
+  for(let x=0;x<=W2;x+=32){ac.beginPath();ac.moveTo(x,0);ac.lineTo(x,H2);ac.stroke();}
+  for(let y=0;y<=H2;y+=32){ac.beginPath();ac.moveTo(0,y);ac.lineTo(W2,y);ac.stroke();}
 }
 
-resize();
-
-window.addEventListener('resize',resize);
-
-function initNodes(){
-
-  nodes = Array.from({length:55},()=>({
-
-    x:Math.random()*W,
-    y:Math.random()*H,
-
-    vx:(Math.random()-.5)*.4,
-    vy:(Math.random()-.5)*.4,
-
-    r:Math.random()*1.8+.8
-
-  }));
+/* ── SOURCE: scrolling binary matrix columns ── */
+function drawSource(t){
+  clearA();
+  drawGrid();
+  // matrix rain columns — binary chars falling
+  const cols=20;
+  const cw=W2/cols;
+  for(let c=0;c<cols;c++){
+    const speed=0.4+((c*7)%5)*.18;
+    const offset=(c*37)%H2;
+    const head=((t*speed+offset)%H2);
+    const len=28+((c*13)%24);
+    for(let i=0;i<len;i++){
+      const cy=((head-i*8+H2*3)%H2);
+      const alpha=Math.max(0,1-i/len);
+      const bit=(Math.floor((t*.5+c*13+i*7))%2);
+      ac.globalAlpha=alpha*(i===0?1:.55);
+      ac.fillStyle=i===0?Y:DIM+'0.7)';
+      ac.font=`${i===0?11:9}px JetBrains Mono,monospace`;
+      ac.textAlign='center';
+      ac.fillText(bit,c*cw+cw/2,cy);
+    }
+  }
+  ac.globalAlpha=1;
+  // central glowing pulse — source origin point
+  const pulse=.5+Math.sin(t*.07)*.5;
+  ac.beginPath();ac.arc(W2/2,H2/2,22,0,Math.PI*2);
+  ac.strokeStyle=`rgba(245,200,66,${.15+pulse*.2})`;ac.lineWidth=1;ac.stroke();
+  ac.beginPath();ac.arc(W2/2,H2/2,14,0,Math.PI*2);
+  ac.strokeStyle=`rgba(245,200,66,${.3+pulse*.3})`;ac.lineWidth=1.5;ac.stroke();
+  ac.beginPath();ac.arc(W2/2,H2/2,5,0,Math.PI*2);
+  ac.fillStyle=Y;ac.globalAlpha=.7+pulse*.3;ac.fill();ac.globalAlpha=1;
+  // label
+  ac.font='10px JetBrains Mono,monospace';ac.fillStyle=DIM+'0.4)';
+  ac.textAlign='center';ac.fillText('raw data origin',W2/2,H2-8);ac.textAlign='left';
 }
 
-initNodes();
+/* ── ENCODER: square wave morphing into sine ── */
+function drawSource_old(){} // unused alias
+function drawEncoder(t){
+  clearA();
+  drawGrid();
+  const mid=H2/2-8;
+  const progress=((t*.008)%1); // 0→1 cycle of morph
+  const morph=Math.sin(progress*Math.PI); // peaks at 0.5
 
-function draw(){
+  // left label: DIGITAL
+  ac.font='bold 9px JetBrains Mono,monospace';
+  ac.fillStyle=DIM+'0.35)';ac.textAlign='left';
+  ac.fillText('DIGITAL',14,mid-38);
+  // right label: ANALOG
+  ac.textAlign='right';ac.fillText('ANALOG',W2-14,mid-38);ac.textAlign='left';
 
-  ctx.clearRect(0,0,W,H);
+  // divider line (fades as morph peaks)
+  ac.strokeStyle=`rgba(245,200,66,${.12*(1-morph*.6)})`;ac.lineWidth=1;ac.setLineDash([3,6]);
+  ac.beginPath();ac.moveTo(W2/2,10);ac.lineTo(W2/2,H2-18);ac.stroke();ac.setLineDash([]);
 
-  nodes.forEach(n=>{
+  // draw waveform — blends square→sine based on morph
+  ac.beginPath();
+  for(let x=18;x<=W2-18;x++){
+    const phase=(x/W2)*4*Math.PI-t*.09;
+    const sqVal=Math.sign(Math.sin(phase))*28;
+    const sinVal=Math.sin(phase)*28;
+    const val=sqVal*(1-morph)+sinVal*morph;
+    const fade=Math.min(1,Math.min((x-18)/30,(W2-18-x)/30));
+    ac.globalAlpha=fade;
+    x===18?ac.moveTo(x,mid+val):ac.lineTo(x,mid+val);
+  }
+  ac.globalAlpha=1;
+  ac.strokeStyle=Y;ac.lineWidth=2;ac.stroke();
 
-    n.x += n.vx;
-    n.y += n.vy;
+  // moving scan line
+  const scanX=18+(t*2.2%(W2-36));
+  ac.strokeStyle=`rgba(245,200,66,.18)`;ac.lineWidth=1;
+  ac.beginPath();ac.moveTo(scanX,10);ac.lineTo(scanX,H2-18);ac.stroke();
 
-    if(n.x<0||n.x>W) n.vx*=-1;
-    if(n.y<0||n.y>H) n.vy*=-1;
+  // bit labels on left side
+  ['1','0','1','1','0','1'].forEach((b,i)=>{
+    const bx=22+i*28;
+    const alpha=bx<W2/2?.55:.15;
+    ac.globalAlpha=alpha;
+    ac.font='9px JetBrains Mono,monospace';ac.fillStyle=Y;
+    ac.textAlign='center';ac.fillText(b,bx,H2-18);
+  });
+  ac.globalAlpha=1;
+  ac.font='10px JetBrains Mono,monospace';ac.fillStyle=DIM+'0.4)';
+  ac.textAlign='center';ac.fillText('digital → analog signal',W2/2,H2-8);ac.textAlign='left';
+}
 
+/* ── NETWORK: topology map with live packet hop ── */
+function drawNetwork(t){
+  clearA();
+  drawGrid();
+  // topology: star-ish with 6 nodes
+  const nodes=[
+    {x:260,y:88,r:10,label:'HUB'},
+    {x:80, y:50,r:7,label:'A'},
+    {x:80, y:126,r:7,label:'B'},
+    {x:440,y:50,r:7,label:'C'},
+    {x:440,y:126,r:7,label:'D'},
+    {x:170,y:30,r:7,label:'E'},
+    {x:350,y:30,r:7,label:'F'},
+  ];
+  const edges=[[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,5],[3,6]];
+
+  // draw edges
+  edges.forEach(([a,b])=>{
+    const na=nodes[a],nb=nodes[b];
+    ac.beginPath();ac.moveTo(na.x,na.y);ac.lineTo(nb.x,nb.y);
+    ac.strokeStyle=DIM+'0.12)';ac.lineWidth=1;ac.stroke();
   });
 
-  for(let i=0;i<nodes.length;i++){
+  // animated packet — cycles through edges
+  const totalEdges=edges.length;
+  const cycleLen=55;
+  const eIdx=Math.floor(t/cycleLen)%totalEdges;
+  const sp=(t%cycleLen)/cycleLen;
+  const [ea,eb]=edges[eIdx];
+  const na=nodes[ea],nb=nodes[eb];
+  const px=na.x+(nb.x-na.x)*sp;
+  const py=na.y+(nb.y-na.y)*sp;
+  // packet trail
+  for(let i=4;i>=1;i--){
+    const tp=Math.max(0,sp-i*.055);
+    const tx=na.x+(nb.x-na.x)*tp,ty=na.y+(nb.y-na.y)*tp;
+    ac.beginPath();ac.arc(tx,ty,4-i*.5,0,Math.PI*2);
+    ac.fillStyle=`rgba(245,200,66,${.18-i*.03})`;ac.fill();
+  }
+  ac.beginPath();ac.arc(px,py,5.5,0,Math.PI*2);
+  ac.fillStyle=Y;ac.fill();
 
-    for(let j=i+1;j<nodes.length;j++){
+  // draw nodes on top
+  nodes.forEach((n,i)=>{
+    const isActive=(eIdx>0&&(i===edges[eIdx][0]||i===edges[eIdx][1]));
+    ac.beginPath();ac.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ac.fillStyle=isActive?'rgba(245,200,66,.22)':'rgba(245,200,66,.06)';ac.fill();
+    ac.strokeStyle=isActive?Y:DIM+'0.35)';ac.lineWidth=isActive?2:1.2;ac.stroke();
+    ac.font=`${i===0?9:8}px JetBrains Mono,monospace`;
+    ac.fillStyle=isActive?Y:DIM+'0.5)';
+    ac.textAlign='center';ac.fillText(n.label,n.x,n.y+(i===0?3.5:3));
+  });
+  // ping ripple on hub
+  const rp=((t*.04)%1);
+  ac.beginPath();ac.arc(nodes[0].x,nodes[0].y,10+rp*18,0,Math.PI*2);
+  ac.strokeStyle=`rgba(245,200,66,${.25*(1-rp)})`;ac.lineWidth=1;ac.stroke();
 
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
+  ac.textAlign='center';
+  ac.font='10px JetBrains Mono,monospace';ac.fillStyle=DIM+'0.4)';
+  ac.fillText('packet hopping nodes',W2/2,H2-8);ac.textAlign='left';
+}
 
-      const dist = Math.sqrt(dx*dx + dy*dy);
+/* ── DECODER: spectrum analyser + CRC checksum ── */
+function drawDecoder(t){
+  clearA();
+  drawGrid();
+  const barCount=24;
+  const bw=(W2-60)/barCount;
+  const baseY=H2-30;
 
-      if(dist < 160){
-
-        ctx.beginPath();
-
-        ctx.strokeStyle =
-        `rgba(255,212,59,${.12*(1-dist/160)})`;
-
-        ctx.lineWidth=.5;
-
-        ctx.moveTo(nodes[i].x,nodes[i].y);
-        ctx.lineTo(nodes[j].x,nodes[j].y);
-
-        ctx.stroke();
-      }
-
-    }
-
+  // spectrum bars
+  for(let i=0;i<barCount;i++){
+    const freq=i/barCount;
+    // noisy input bars (left half)
+    const noisyH=(Math.sin(i*1.3+t*.07)*18+Math.sin(i*.7-t*.11)*12+20+Math.random()*8);
+    // clean decoded bars (right half)  
+    const cleanH=i<4||i>18?6:Math.sin(freq*Math.PI)*45+5;
+    const isLeft=i<barCount/2;
+    const h=isLeft?noisyH:cleanH;
+    const alpha=isLeft?.35:.75;
+    ac.fillStyle=`rgba(245,200,66,${alpha})`;
+    ac.fillRect(30+i*bw,baseY-h,bw-2,h);
   }
 
-  nodes.forEach(n=>{
+  // divider + labels
+  ac.strokeStyle=DIM+'0.2)';ac.lineWidth=1;ac.setLineDash([2,4]);
+  ac.beginPath();ac.moveTo(W2/2,18);ac.lineTo(W2/2,baseY+2);ac.stroke();ac.setLineDash([]);
+  ac.font='8px JetBrains Mono,monospace';ac.fillStyle=DIM+'0.3)';
+  ac.textAlign='center';ac.fillText('NOISY',W2/4,16);
+  ac.fillText('DECODED',W2*.75,16);
 
-    ctx.beginPath();
+  // CRC ticker scrolling along bottom
+  const crcBits='10110011101001011100101';
+  const offset=Math.floor(t*.8)%crcBits.length;
+  const crcStr='CRC: '+[...crcBits.slice(offset),...crcBits.slice(0,offset)].join('');
+  ac.font='8px JetBrains Mono,monospace';
+  ac.globalAlpha=.28;
+  for(let i=0;i<3;i++){
+    ac.fillStyle=Y;ac.textAlign='left';
+    ac.fillText(crcStr,i*(W2/3)-((t*.8)%(W2/3)),H2-14);
+  }
+  ac.globalAlpha=1;
 
-    ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+  // checkmark pulse
+  const ck=.6+Math.sin(t*.08)*.4;
+  ac.globalAlpha=ck;
+  ac.font='bold 18px sans-serif';ac.fillStyle=Y;
+  ac.textAlign='right';ac.fillText('✓ OK',W2-14,36);
+  ac.globalAlpha=1;
 
-    ctx.fillStyle='rgba(255,212,59,.35)';
+  ac.textAlign='center';
+  ac.font='10px JetBrains Mono,monospace';ac.fillStyle=DIM+'0.4)';
+  ac.fillText('error check · signal decoded',W2/2,H2-8);ac.textAlign='left';
+}
 
-    ctx.fill();
+/* ── DESTINATION: data frame assembly ── */
+function drawDestination(t){
+  clearA();
+  drawGrid();
 
+  // 5 packet fragments flying in from left, assembling into frame
+  const frameX=W2/2-90, frameY=50, frameW=180, frameH=60;
+  const fields=[
+    {label:'DEST',w:36},
+    {label:'SRC',w:32},
+    {label:'TYPE',w:28},
+    {label:'PAYLOAD',w:56},
+    {label:'FCS',w:28},
+  ];
+
+  const arrive=Math.min(1,t/100);
+  let xOff=frameX;
+
+  fields.forEach((f,i)=>{
+    const delay=i/fields.length;
+    const a=Math.max(0,Math.min(1,(arrive-delay)/(1-delay+.001)));
+    // fly in from left
+    const startX=14;
+    const fx=startX+(xOff-startX)*a;
+    const alpha=a;
+    ac.globalAlpha=alpha;
+    // field box
+    ac.fillStyle='rgba(245,200,66,.07)';
+    ac.fillRect(fx,frameY,f.w-2,frameH);
+    ac.strokeStyle=DIM+'0.45)';ac.lineWidth=1.2;
+    ac.strokeRect(fx,frameY,f.w-2,frameH);
+    // label
+    ac.font='7px JetBrains Mono,monospace';ac.fillStyle=Y;
+    ac.textAlign='center';ac.fillText(f.label,fx+f.w/2-1,frameY+18);
+    // data bytes (scrolling)
+    ac.font='6px JetBrains Mono,monospace';ac.fillStyle=DIM+'0.55)';
+    const hex=((i*37+Math.floor(t*.4+i*11))%256).toString(16).toUpperCase().padStart(2,'0');
+    ac.fillText(hex,fx+f.w/2-1,frameY+34);
+    ac.fillText(((i*19+Math.floor(t*.3))%256).toString(16).toUpperCase().padStart(2,'0'),fx+f.w/2-1,frameY+46);
+    xOff+=f.w;
+    ac.globalAlpha=1;
   });
 
-  requestAnimationFrame(draw);
+  // outer frame border once assembled
+  if(arrive>0.85){
+    const glow=Math.sin(t*.1)*.15+.25;
+    ac.strokeStyle=`rgba(245,200,66,${glow})`;ac.lineWidth=1.5;
+    ac.strokeRect(frameX-2,frameY-2,frameW+4,frameH+4);
+    // delivery confirm pulse ring
+    const rp=((t*.05)%1);
+    ac.beginPath();ac.arc(frameX+frameW/2,frameY+frameH/2,40+rp*30,0,Math.PI*2);
+    ac.strokeStyle=`rgba(245,200,66,${.18*(1-rp)})`;ac.lineWidth=1;ac.stroke();
+  }
+
+  // flying bits heading toward frame from right edge
+  for(let i=0;i<5;i++){
+    const bx=W2-20-((t*1.8+i*60)%(W2-frameX-frameW-20));
+    const by=frameY+10+i*10;
+    ac.globalAlpha=.35;
+    ac.font='9px JetBrains Mono,monospace';ac.fillStyle=Y;
+    ac.textAlign='center';
+    ac.fillText(i%2?'1':'0',bx,by);
+    ac.globalAlpha=1;
+  }
+
+  ac.textAlign='center';
+  ac.font='10px JetBrains Mono,monospace';ac.fillStyle=DIM+'0.4)';
+  ac.fillText(arrive>0.9?'frame assembled · delivered':'assembling frame…',W2/2,H2-8);
+  ac.textAlign='left';
 }
 
-draw();
+/* ─── NODE DATA ─── */
+const nodeData={
+  source:{title:'SOURCE SYSTEM',step:'STEP 01 · ORIGIN',
+    desc:'The source is where it all begins. A device generates raw binary data — the pulse that kicks off the entire communication chain. Every bit on screen began here.',
+    draw:drawSource},
+  encoder:{title:'SIGNAL ENCODER',step:'STEP 02 · TRANSFORMATION',
+    desc:'The encoder converts digital square-wave bits into transmittable analog signals — electrical pulses, light through fibre, or radio waves. Digital becomes physical.',
+    draw:drawEncoder},
+  network:{title:'NETWORK ROUTING',step:'STEP 03 · TRANSIT',
+    desc:'Routers and switches find the best path for packets through the internet, hopping node to node. Your data might take a completely different route each time.',
+    draw:drawNetwork},
+  decoder:{title:'SIGNAL DECODER',step:'STEP 04 · RECONSTRUCTION',
+    desc:'The decoder runs CRC checks, strips noise, and reconstructs the clean original signal. Errors caught here are corrected before data moves up the stack.',
+    draw:drawDecoder},
+  destination:{title:'DESTINATION',step:'STEP 05 · DELIVERY',
+    desc:'The destination reassembles every packet fragment in the correct order, building the complete data frame and handing the finished message to the end application.',
+    draw:drawDestination}
+};
 
-/* BITS */
+/* ─── MODAL LOGIC ─── */
+const backdrop=document.getElementById('modalBg');
+const mTitle=document.getElementById('mTitle');
+const mStep=document.getElementById('mStep');
+const mDesc=document.getElementById('mDesc');
+const mClose=document.getElementById('mClose');
+let raf=null,ft=0;
 
-function makeBits(){
+function stopAnim(){if(raf){cancelAnimationFrame(raf);raf=null;ft=0;}}
 
-  const bits = Array.from(
-    {length:150},
-    ()=>Math.round(Math.random())
-  );
-
-  return bits
-    .map(b=>`<span class="bit ${b?'one':''}">${b}</span>`)
-    .join('');
+function openModal(key){
+  const d=nodeData[key];if(!d)return;
+  stopAnim();
+  mTitle.textContent=d.title;
+  mStep.textContent=d.step;
+  mDesc.textContent=d.desc;
+  backdrop.classList.add('open');
+  document.body.style.overflow='hidden';
+  function loop(){d.draw(ft);ft++;raf=requestAnimationFrame(loop);}
+  loop();
 }
 
-document.getElementById('bits').innerHTML = makeBits();
-document.getElementById('bits2').innerHTML = makeBits();
+function closeModal(){
+  stopAnim();
+  backdrop.classList.remove('open');
+  document.body.style.overflow='';
+  document.querySelectorAll('.p-node').forEach(n=>n.classList.remove('tapped'));
+  clearA();
+}
 
+document.querySelectorAll('.p-node').forEach(n=>{
+  n.addEventListener('click',function(e){
+    e.stopPropagation();
+    document.querySelectorAll('.p-node').forEach(x=>x.classList.remove('tapped'));
+    this.classList.add('tapped');
+    openModal(this.dataset.node);
+  });
+});
+
+backdrop.addEventListener('click',closeModal);
+document.getElementById('modalCard').addEventListener('click',e=>e.stopPropagation());
+mClose.addEventListener('click',closeModal);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 </script>
-
 </body>
 </html>
