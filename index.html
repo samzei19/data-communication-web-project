@@ -3,24 +3,32 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>Data Communications — Samuel Osei Nyampong</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
 <style>
+
 :root{
   --y:#ffd43b;
-  --ys:#ffe066;
   --g:#ffb703;
   --dark:#0a0a0a;
-  --dark2:#111;
   --card:rgba(255,255,255,0.04);
   --border:rgba(255,212,59,0.15);
   --text:#e8e8e8;
   --muted:#909090;
 }
 
-*{ margin:0; padding:0; box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   background:var(--dark);
@@ -29,10 +37,17 @@ body{
   overflow-x:hidden;
 }
 
-::-webkit-scrollbar{ width:8px; }
-::-webkit-scrollbar-thumb{ background:var(--y); border-radius:20px; }
+::-webkit-scrollbar{
+  width:8px;
+}
 
-/* ─── CANVAS BG ─── */
+::-webkit-scrollbar-thumb{
+  background:var(--y);
+  border-radius:20px;
+}
+
+/* BACKGROUND */
+
 #bg-canvas{
   position:fixed;
   inset:0;
@@ -40,50 +55,52 @@ body{
   pointer-events:none;
 }
 
-/* ─── NAV ─── */
+/* NAV */
+
 nav{
   position:fixed;
-  top:0; width:100%;
+  top:0;
+  width:100%;
   z-index:999;
-  background:rgba(10,10,10,0.85);
+  background:rgba(10,10,10,.85);
   backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,212,59,0.1);
-  padding:.85rem 2.5rem;
+  border-bottom:1px solid rgba(255,212,59,.1);
+
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
+
+  padding:1rem 2rem;
 }
 
 .logo{
   font-family:'Syne',sans-serif;
-  font-size:1rem;
-  font-weight:800;
   color:var(--y);
+  font-weight:800;
   letter-spacing:.12em;
-  text-transform:uppercase;
+  font-size:1rem;
 }
 
 .nav-links{
   display:flex;
-  gap:1.6rem;
   list-style:none;
+  gap:1.4rem;
+  flex-wrap:wrap;
 }
 
 .nav-links a{
   position:relative;
   text-decoration:none;
-  font-size:.85rem;
-  font-weight:700;
-  letter-spacing:.06em;
+  font-size:.82rem;
   font-family:'DM Mono',monospace;
+  font-weight:700;
 
   background:linear-gradient(
     90deg,
-    #ffd43b 0%,
-    #fff3a3 25%,
-    #ffb703 50%,
-    #fff3a3 75%,
-    #ffd43b 100%
+    #ffd43b,
+    #fff4b0,
+    #ffb703,
+    #ffd43b
   );
 
   background-size:300% auto;
@@ -92,566 +109,686 @@ nav{
   -webkit-text-fill-color:transparent;
 
   animation:navFlow 6s linear infinite;
-
-  transition:
-    transform .25s ease,
-    filter .25s ease;
-
-  padding:.2rem 0;
 }
 
-/* glowing hover effect */
-.nav-links a:hover{
-  transform:translateY(-2px);
-
-  filter:
-    drop-shadow(0 0 6px rgba(255,212,59,.85))
-    drop-shadow(0 0 18px rgba(255,212,59,.45));
-}
-
-/* animated underline */
 .nav-links a::after{
   content:'';
   position:absolute;
   left:0;
-  bottom:-6px;
-
+  bottom:-5px;
   width:0%;
   height:2px;
-
-  border-radius:20px;
-
-  background:linear-gradient(
-    90deg,
-    transparent,
-    #ffd43b,
-    #fff4b0,
-    #ffd43b,
-    transparent
-  );
-
-  box-shadow:
-    0 0 10px rgba(255,212,59,.75),
-    0 0 25px rgba(255,212,59,.25);
-
-  transition:width .35s ease;
+  border-radius:10px;
+  background:var(--y);
+  transition:.3s;
 }
 
 .nav-links a:hover::after{
   width:100%;
 }
 
-/* moving horizontal gradient */
 @keyframes navFlow{
-  0%{
-    background-position:0% center;
+  from{
+    background-position:0%;
   }
 
-  100%{
-    background-position:300% center;
+  to{
+    background-position:300%;
   }
 }
 
-/* ─── LAYOUT ─── */
-section{ position:relative; z-index:2; }
+/* HERO */
 
-/* ─── HERO ─── */
 .hero{
   min-height:100vh;
+
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
+
   padding:8rem 2rem 5rem;
+
+  position:relative;
+  z-index:2;
 }
 
-.hero-content{ max-width:780px; text-align:center; }
+.hero-content{
+  max-width:850px;
+  text-align:center;
+}
 
 .avatar{
-  width:150px; height:150px;
-  margin:0 auto 1.8rem;
+  width:150px;
+  height:150px;
+  margin:0 auto 1.5rem;
   border-radius:50%;
   overflow:hidden;
   border:3px solid var(--y);
-  box-shadow:0 0 0 8px rgba(255,212,59,.06), 0 0 60px rgba(255,212,59,.2);
+
   animation:halo 3s ease-in-out infinite;
 }
-@keyframes halo{
-  0%,100%{ box-shadow:0 0 0 8px rgba(255,212,59,.06), 0 0 40px rgba(255,212,59,.15); }
-  50%{ box-shadow:0 0 0 14px rgba(255,212,59,.1), 0 0 70px rgba(255,212,59,.3); }
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
-.avatar img{ width:100%; height:100%; object-fit:cover; }
+
+@keyframes halo{
+
+  0%,100%{
+    box-shadow:
+      0 0 0 8px rgba(255,212,59,.05),
+      0 0 40px rgba(255,212,59,.15);
+  }
+
+  50%{
+    box-shadow:
+      0 0 0 14px rgba(255,212,59,.1),
+      0 0 80px rgba(255,212,59,.25);
+  }
+}
 
 .chip{
   display:inline-block;
+  margin-bottom:1rem;
+
+  padding:.4rem 1rem;
+
+  border-radius:100px;
+
+  background:rgba(255,212,59,.08);
+
+  border:1px solid rgba(255,212,59,.18);
+
+  color:var(--y);
+
   font-family:'DM Mono',monospace;
   font-size:.75rem;
-  letter-spacing:.12em;
-  color:var(--y);
-  background:rgba(255,212,59,.08);
-  border:1px solid rgba(255,212,59,.2);
-  padding:.35rem .9rem;
-  border-radius:100px;
-  margin-bottom:1rem;
 }
 
 .hero h1{
   font-family:'Syne',sans-serif;
   font-size:clamp(3rem,8vw,5.5rem);
-  font-weight:800;
   line-height:.95;
-  letter-spacing:-.02em;
+  font-weight:800;
 }
-.hero h1 span{ color:var(--y); }
 
-.hero p{
-  margin:1.5rem auto 0;
-  max-width:620px;
-  color:var(--muted);
-  line-height:1.85;
+.hero h1 span{
+  color:var(--y);
+}
+
+.hero-bio{
+  margin-top:1.5rem;
+  line-height:1.9;
+  color:#a0a0a0;
   font-size:1rem;
 }
 
+.kw{
+  color:#fff;
+  font-weight:700;
+}
+
+.glow{
+  color:var(--y);
+  text-shadow:0 0 12px rgba(255,212,59,.55);
+}
+
+.pulse{
+  animation:pulseText 2s infinite;
+}
+
+.shine{
+  background:linear-gradient(90deg,#fff,#ffd43b,#fff);
+  background-size:200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shine 4s linear infinite;
+}
+
+@keyframes shine{
+  from{
+    background-position:0%;
+  }
+
+  to{
+    background-position:200%;
+  }
+}
+
+@keyframes pulseText{
+
+  0%,100%{
+    text-shadow:0 0 5px rgba(255,212,59,.2);
+  }
+
+  50%{
+    text-shadow:0 0 18px rgba(255,212,59,.7);
+  }
+}
+
 .hero-btns{
+  margin-top:2rem;
+
   display:flex;
   justify-content:center;
-  gap:.85rem;
+  gap:1rem;
   flex-wrap:wrap;
-  margin-top:2.2rem;
 }
 
 .btn{
-  padding:.8rem 1.6rem;
+  padding:.9rem 1.5rem;
   border-radius:12px;
   text-decoration:none;
-  font-weight:600;
-  font-size:.9rem;
+  font-weight:700;
   transition:.25s;
 }
-.btn-y{ background:var(--y); color:#000; }
-.btn-y:hover{ background:var(--g); transform:translateY(-2px); }
+
+.btn-y{
+  background:var(--y);
+  color:#000;
+}
+
+.btn-y:hover{
+  transform:translateY(-2px);
+  background:var(--g);
+}
+
 .btn-ghost{
-  border:1px solid rgba(255,212,59,.3);
+  border:1px solid rgba(255,212,59,.25);
   color:#ddd;
 }
-.btn-ghost:hover{ background:rgba(255,212,59,.07); }
 
-/* ─── CONTENT SECTIONS ─── */
+.btn-ghost:hover{
+  background:rgba(255,212,59,.07);
+}
+
+/* SECTIONS */
+
+section{
+  position:relative;
+  z-index:2;
+}
+
 .sec{
-  max-width:1100px;
-  margin:0 auto;
+  max-width:1150px;
+  margin:auto;
   padding:6rem 2rem;
 }
+
 .sec-chip{
-  font-family:'DM Mono',monospace;
-  font-size:.72rem;
-  letter-spacing:.14em;
-  text-transform:uppercase;
   color:var(--y);
+  font-family:'DM Mono',monospace;
+  font-size:.75rem;
+  letter-spacing:.14em;
   margin-bottom:.6rem;
 }
+
 .sec-title{
   font-family:'Syne',sans-serif;
-  font-size:clamp(1.9rem,5vw,2.9rem);
-  font-weight:800;
-  margin-bottom:2.2rem;
-  letter-spacing:-.02em;
+  font-size:clamp(2rem,5vw,3rem);
+  margin-bottom:2rem;
 }
 
-/* ─── CARDS ─── */
+/* CARDS */
+
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:1.2rem;
 }
+
 .card{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:20px;
-  padding:1.6rem;
+  padding:1.5rem;
   transition:.3s;
-  backdrop-filter:blur(8px);
   position:relative;
   overflow:hidden;
 }
-.card::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at top right,rgba(255,212,59,.06),transparent 60%);
-  pointer-events:none;
-}
+
 .card:hover{
-  border-color:rgba(255,212,59,.4);
   transform:translateY(-5px);
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
+  border-color:rgba(255,212,59,.35);
 }
+
 .card-num{
+  color:rgba(255,212,59,.12);
+  font-size:2rem;
   font-family:'DM Mono',monospace;
-  font-size:2.2rem;
-  font-weight:300;
-  color:rgba(255,212,59,.15);
-  line-height:1;
   margin-bottom:.5rem;
 }
+
 .card h3{
-  font-family:'Syne',sans-serif;
-  font-size:1.05rem;
-  font-weight:700;
   color:var(--y);
   margin-bottom:.6rem;
+  font-family:'Syne',sans-serif;
 }
-.card p{ color:#b0b0b0; line-height:1.75; font-size:.92rem; }
 
-/* ─── TELEGRAPH REVAMP ─── */
+.card p{
+  color:#a9a9a9;
+  line-height:1.8;
+}
+
+/* TELEGRAPH */
+
 .telegraph-wrap{
   margin-top:2rem;
-  border-radius:28px;
-  background:linear-gradient(160deg,#0f0f0f 0%,#0a0a0a 100%);
-  border:1px solid rgba(255,212,59,.12);
   padding:3rem 2rem;
-  position:relative;
+  border-radius:28px;
+
+  background:linear-gradient(160deg,#0f0f0f,#090909);
+
+  border:1px solid rgba(255,212,59,.1);
+
   overflow:hidden;
+  position:relative;
 }
 
-/* grid lines in background */
 .telegraph-wrap::before{
   content:'';
   position:absolute;
   inset:0;
+
   background-image:
-    linear-gradient(rgba(255,212,59,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,212,59,.04) 1px,transparent 1px);
+    linear-gradient(rgba(255,212,59,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,212,59,.03) 1px,transparent 1px);
+
   background-size:40px 40px;
-  pointer-events:none;
 }
 
 .tg-header{
   text-align:center;
-  margin-bottom:2.5rem;
+  margin-bottom:2rem;
   position:relative;
   z-index:2;
 }
+
 .tg-header h3{
-  font-family:'DM Mono',monospace;
-  font-size:.78rem;
-  letter-spacing:.18em;
   color:var(--y);
-  text-transform:uppercase;
+  font-family:'DM Mono',monospace;
   margin-bottom:.4rem;
 }
-.tg-header p{ color:#666; font-size:.88rem; }
 
-/* the actual 5-node pipeline */
+.tg-header p{
+  color:#666;
+}
+
+/* PIPELINE */
+
 .pipeline{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:0;
+
+  overflow-x:auto;
+
   position:relative;
   z-index:2;
-  flex-wrap:nowrap;
-  overflow-x:auto;
-  padding-bottom:.5rem;
+
+  padding-bottom:1rem;
 }
 
 .pipe-node{
   flex-shrink:0;
+
   width:150px;
+
   background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,212,59,.18);
+
+  border:1px solid rgba(255,212,59,.16);
+
   border-radius:18px;
+
   padding:1.4rem 1rem;
+
   text-align:center;
-  position:relative;
+
   transition:.3s;
+
+  position:relative;
 }
+
 .pipe-node:hover{
-  border-color:rgba(255,212,59,.55);
+  transform:scale(1.05);
+  border-color:rgba(255,212,59,.5);
   background:rgba(255,212,59,.05);
-  transform:scale(1.04);
 }
 
 .pipe-icon{
   font-size:2rem;
   margin-bottom:.7rem;
   display:block;
-  filter:drop-shadow(0 0 8px rgba(255,212,59,.4));
 }
+
 .pipe-node h4{
+  color:var(--y);
   font-family:'Syne',sans-serif;
-  font-size:.82rem;
-  font-weight:700;
+  margin-bottom:.5rem;
+}
+
+.pipe-node small{
+  color:#777;
+  line-height:1.5;
+}
+
+/* POPUPS */
+
+.pipe-popup{
+  position:absolute;
+
+  bottom:115%;
+  left:50%;
+
+  transform:translateX(-50%) translateY(10px);
+
+  width:220px;
+
+  background:#111;
+
+  border:1px solid rgba(255,212,59,.25);
+
+  border-radius:14px;
+
+  padding:1rem;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:.3s;
+
+  box-shadow:0 20px 40px rgba(0,0,0,.4);
+}
+
+.pipe-popup h5{
   color:var(--y);
   margin-bottom:.4rem;
-  letter-spacing:.02em;
-}
-.pipe-node small{
-  color:#6a6a6a;
-  font-size:.73rem;
-  line-height:1.5;
-  display:block;
-  font-family:'DM Mono',monospace;
+  font-family:'Syne',sans-serif;
 }
 
-/* animated wire between nodes */
+.pipe-popup p{
+  color:#999;
+  line-height:1.6;
+  font-size:.78rem;
+}
+
+.pipe-node:hover .pipe-popup{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* WIRES */
+
 .wire{
-  flex-shrink:0;
   width:60px;
   height:2px;
-  background:rgba(255,212,59,.12);
+  background:rgba(255,212,59,.15);
   position:relative;
-  overflow:visible;
+  flex-shrink:0;
 }
-.wire::before{
-  content:'';
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  left:-6px;
-  width:12px;
-  height:12px;
-  background:var(--y);
-  border-radius:50%;
-  box-shadow:0 0 12px var(--y), 0 0 24px rgba(255,212,59,.4);
-  animation:pulse-dot 2s ease-in-out infinite;
-}
+
 .wire::after{
   content:'';
+
   position:absolute;
-  top:-1px;
-  left:0;
+
   width:20px;
   height:4px;
+
+  top:-1px;
+
   background:linear-gradient(to right,var(--y),transparent);
-  border-radius:4px;
+
   animation:shoot 1.8s linear infinite;
 }
-.wire:nth-child(2) ::after{ animation-delay:.3s; }
-.wire:nth-child(4) ::after{ animation-delay:.6s; }
-.wire:nth-child(6) ::after{ animation-delay:.9s; }
 
 @keyframes shoot{
-  from{ transform:translateX(-20px); opacity:0; }
-  20%{ opacity:1; }
-  80%{ opacity:1; }
-  to{ transform:translateX(80px); opacity:0; }
-}
-@keyframes pulse-dot{
-  0%,100%{ box-shadow:0 0 6px var(--y); opacity:.5; }
-  50%{ box-shadow:0 0 20px var(--y),0 0 40px rgba(255,212,59,.5); opacity:1; }
+
+  from{
+    transform:translateX(-20px);
+    opacity:0;
+  }
+
+  20%{
+    opacity:1;
+  }
+
+  80%{
+    opacity:1;
+  }
+
+  to{
+    transform:translateX(80px);
+    opacity:0;
+  }
 }
 
-/* data bit stream below */
+/* BIT STREAM */
+
 .bit-stream{
   margin-top:2.5rem;
-  position:relative;
-  z-index:2;
+
+  height:42px;
+
   overflow:hidden;
-  height:36px;
+
   border-radius:100px;
+
   background:rgba(0,0,0,.4);
-  border:1px solid rgba(255,212,59,.1);
+
+  border:1px solid rgba(255,212,59,.08);
+
   display:flex;
   align-items:center;
+
+  position:relative;
+  z-index:2;
 }
+
+.bits-track{
+  display:flex;
+  width:max-content;
+  animation:scrollBits 18s linear infinite;
+}
+
 .bits{
   display:flex;
-  gap:0;
   white-space:nowrap;
-  animation:scrollBits 8s linear infinite;
 }
+
 .bit{
   font-family:'DM Mono',monospace;
   font-size:.75rem;
-  padding:0 .25rem;
-  color:rgba(255,212,59,.55);
-  transition:.1s;
+  padding:0 .2rem;
+  color:rgba(255,212,59,.45);
 }
-.bit.one{ color:var(--y); font-weight:700; }
-.bit-label{
-  font-family:'DM Mono',monospace;
-  font-size:.68rem;
-  color:#444;
-  padding:0 .8rem;
-  letter-spacing:.1em;
-  white-space:nowrap;
+
+.bit.one{
+  color:var(--y);
+  font-weight:700;
 }
 
 @keyframes scrollBits{
-  from{ transform:translateX(0); }
-  to{ transform:translateX(-50%); }
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-50%);
+  }
 }
 
-/* OSI mini layers */
+/* OSI */
+
 .layers-row{
   display:flex;
   gap:1rem;
   margin-top:2rem;
-  position:relative;
-  z-index:2;
   flex-wrap:wrap;
 }
+
 .layer-bar{
   flex:1;
-  min-width:100px;
-  padding:.7rem .9rem;
-  border-radius:10px;
-  border-left:3px solid var(--y);
+  min-width:110px;
+
+  padding:.8rem .9rem;
+
+  border-radius:12px;
+
   background:rgba(255,212,59,.04);
-  position:relative;
-  overflow:hidden;
-  transition:.2s;
+
+  border-left:3px solid var(--y);
 }
-.layer-bar:hover{ background:rgba(255,212,59,.09); }
-.layer-bar::after{
-  content:attr(data-n);
-  position:absolute;
-  right:.7rem; top:50%;
-  transform:translateY(-50%);
-  font-family:'DM Mono',monospace;
-  font-size:1.4rem;
-  font-weight:700;
-  color:rgba(255,212,59,.1);
-}
+
 .layer-bar span{
-  font-family:'Syne',sans-serif;
-  font-size:.78rem;
-  font-weight:700;
   color:var(--y);
+  font-weight:700;
   display:block;
   margin-bottom:.2rem;
 }
-.layer-bar small{ color:#666; font-size:.7rem; font-family:'DM Mono',monospace; }
 
-/* ─── REFLECTION ─── */
+.layer-bar small{
+  color:#666;
+}
+
+/* QUOTE */
+
 .quote-block{
   border-left:3px solid var(--y);
-  padding:1.5rem 1.8rem;
+
   background:rgba(255,212,59,.04);
-  border-radius:0 16px 16px 0;
-  font-size:1.05rem;
-  line-height:1.85;
-  color:#ddd;
+
+  padding:1.5rem;
+
+  border-radius:0 14px 14px 0;
+
+  line-height:1.9;
+
   font-style:italic;
+
+  color:#ddd;
 }
+
 .reflection-body{
   margin-top:1.5rem;
   color:#aaa;
   line-height:1.9;
-  font-size:.97rem;
 }
 
-/* ─── VIDEO ─── */
+/* VIDEO */
+
 .video-frame{
   margin-top:2rem;
-  border-radius:22px;
+
   overflow:hidden;
+
+  border-radius:22px;
+
   border:1px solid rgba(255,212,59,.15);
-  box-shadow:0 12px 50px rgba(0,0,0,.5);
-}
-.video-frame iframe{
-  width:100%; height:520px; border:none; display:block;
 }
 
-/* ─── RESOURCES ─── */
+.video-frame iframe{
+  width:100%;
+  height:520px;
+  border:none;
+}
+
+/* RESOURCES */
+
 .resources-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:1.2rem;
-  margin-top:1rem;
 }
+
 .res-card{
   background:var(--card);
+
   border:1px solid var(--border);
+
   border-radius:18px;
-  padding:1.6rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  transition:.25s;
+
+  padding:1.5rem;
+
+  transition:.3s;
 }
+
 .res-card:hover{
+  transform:translateY(-4px);
   border-color:rgba(255,212,59,.4);
-  transform:translateY(-3px);
 }
+
 .res-card h4{
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:1rem;
   color:var(--y);
+  margin-bottom:.8rem;
+  font-family:'Syne',sans-serif;
 }
-.res-card p{ color:#888; font-size:.88rem; line-height:1.7; flex:1; }
+
+.res-card p{
+  color:#8f8f8f;
+  line-height:1.8;
+  margin-bottom:1rem;
+}
+
 .res-card a{
   display:inline-block;
-  padding:.55rem 1.1rem;
-  background:rgba(255,212,59,.1);
-  border:1px solid rgba(255,212,59,.25);
-  color:var(--y);
-  border-radius:10px;
-  text-decoration:none;
-  font-size:.83rem;
-  font-weight:600;
-  font-family:'DM Mono',monospace;
-  transition:.2s;
-  align-self:flex-start;
-}
-.res-card a:hover{ background:rgba(255,212,59,.2); }
 
-/* ─── FOOTER ─── */
+  padding:.6rem 1rem;
+
+  border-radius:10px;
+
+  background:rgba(255,212,59,.1);
+
+  border:1px solid rgba(255,212,59,.2);
+
+  text-decoration:none;
+
+  color:var(--y);
+
+  font-family:'DM Mono',monospace;
+}
+
+/* FOOTER */
+
 footer{
   position:relative;
   z-index:2;
+
   text-align:center;
-  padding:2.5rem 2rem;
+
+  padding:2.5rem 1rem;
+
   border-top:1px solid rgba(255,255,255,.05);
-  color:#555;
-  font-size:.85rem;
-  font-family:'DM Mono',monospace;
-  letter-spacing:.06em;
+
+  color:#666;
 }
 
-/* ─── RESPONSIVE ─── */
+footer p:last-child{
+  margin-top:1rem;
+  color:#444;
+  font-size:.75rem;
+  letter-spacing:.08em;
+}
+
+/* MOBILE */
+
 @media(max-width:768px){
-  .pipeline{ gap:0; justify-content:flex-start; }
-  .wire{ width:30px; }
-  .pipe-node{ width:120px; }
-  .video-frame iframe{ height:240px; }
-  .nav-links{ gap:.8rem; font-size:.75rem; }
-  .layers-row{ gap:.6rem; }
-}
-/* ───────────────── MOBILE OPTIMIZATION ───────────────── */
-@media screen and (max-width: 768px){
 
-  /* NAVBAR */
   nav{
-    padding:1rem;
     flex-direction:column;
     gap:.8rem;
   }
 
-  .logo{
-    font-size:.95rem;
-  }
-
   .nav-links{
-    width:100%;
     justify-content:center;
-    flex-wrap:wrap;
-    gap:.9rem;
   }
 
-  .nav-links a{
-    font-size:.72rem;
-    letter-spacing:.03em;
-  }
-
-  /* HERO */
   .hero{
-    padding:9rem 1.2rem 4rem;
-  }
-
-  .hero-content{
-    width:100%;
+    padding:10rem 1.2rem 4rem;
   }
 
   .avatar{
@@ -659,27 +796,9 @@ footer{
     height:120px;
   }
 
-  .chip{
-    font-size:.63rem;
-    line-height:1.5;
-  }
-
-  .hero h1{
-    font-size:clamp(2.5rem,12vw,4rem);
-    line-height:1;
-  }
-
-  .hero-bio,
-  .hero p{
-    font-size:.95rem;
-    line-height:1.8;
-    padding:0 .2rem;
-  }
-
   .hero-btns{
     flex-direction:column;
     align-items:center;
-    width:100%;
   }
 
   .btn{
@@ -688,428 +807,691 @@ footer{
     text-align:center;
   }
 
-  /* SECTIONS */
   .sec{
     padding:4rem 1.1rem;
   }
 
-  .sec-title{
-    font-size:2rem;
-    line-height:1.1;
-  }
-
-  /* GRID */
   .grid{
     grid-template-columns:1fr;
   }
 
-  /* TELEGRAPH */
-  .telegraph-wrap{
-    padding:2rem 1rem;
-  }
-
-  .pipeline{
-    justify-content:flex-start;
-    overflow-x:auto;
-    padding-bottom:1rem;
-    gap:0;
-    scroll-snap-type:x mandatory;
-  }
-
-  .pipe-node{
-    width:130px;
-    scroll-snap-align:center;
-  }
-
-  .wire{
-    width:35px;
+  .resources-grid{
+    grid-template-columns:1fr;
   }
 
   .layers-row{
     flex-direction:column;
   }
 
-  .layer-bar{
-    width:100%;
-  }
-
-  /* VIDEO */
   .video-frame iframe{
     height:220px;
   }
 
-  /* RESOURCES */
-  .resources-grid{
-    grid-template-columns:1fr;
-  }
-
-  /* REFLECTION */
-  .quote-block{
-    font-size:.95rem;
-    padding:1.2rem;
-  }
-
-  .reflection-body{
-    font-size:.92rem;
-  }
-
-  /* FOOTER */
-  footer{
-    font-size:.75rem;
-    padding:2rem 1rem;
-  }
-}
-
-/* EXTRA SMALL DEVICES */
-@media screen and (max-width: 480px){
-
-  .hero{
-    padding-top:10rem;
-  }
-
-  .hero h1{
-    font-size:2.3rem;
-  }
-
-  .nav-links{
-    gap:.6rem;
-  }
-
-  .nav-links a{
-    font-size:.66rem;
-  }
-
   .pipe-node{
-    width:115px;
-    padding:1rem .7rem;
+    width:130px;
   }
 
-  .pipe-icon{
-    font-size:1.5rem;
+  .wire{
+    width:35px;
   }
 
-  .video-frame iframe{
-    height:200px;
+  .pipe-popup{
+    position:relative;
+    opacity:1;
+    pointer-events:auto;
+    width:100%;
+    left:auto;
+    bottom:auto;
+    transform:none;
+    margin-top:1rem;
   }
 
-  .card{
-    padding:1.2rem;
-  }
 }
+
 </style>
 </head>
+
 <body>
 
-<!-- CANVAS BACKGROUND -->
 <canvas id="bg-canvas"></canvas>
 
 <!-- NAV -->
+
 <nav>
-  <div class="logo">DATA COMMS</div>
-  <ul class="nav-links">
-    <li><a href="#home">Home</a></li>
-    <li><a href="#topics">Topics</a></li>
-    <li><a href="#telegraph">Comm Flow</a></li>
-    <li><a href="#reflection">Reflection</a></li>
-    <li><a href="#video">Video</a></li>
-    <li><a href="#resources">Resources</a></li>
-  </ul>
+
+<div class="logo">
+DATA COMMS
+</div>
+
+<ul class="nav-links">
+<li><a href="#home">Home</a></li>
+<li><a href="#topics">Topics</a></li>
+<li><a href="#telegraph">Comm Flow</a></li>
+<li><a href="#reflection">Reflection</a></li>
+<li><a href="#video">Video</a></li>
+<li><a href="#resources">Resources</a></li>
+</ul>
+
 </nav>
 
 <!-- HERO -->
+
 <section class="hero" id="home">
-  <div class="hero-content">
-    <div class="avatar">
-      <img src="sam.jpg" alt="Samuel Osei Nyampong" onerror="this.style.background='#1a1a1a';this.style.display='flex';this.alt='SNO'">
-    </div>
-    <div class="chip">PUIS/25120003 · ISE · DATA COMMUNICATIONS</div>
-    <h1>Samuel Osei<br><span>Nyampong</span></h1>
-  <p class="hero-bio">
-  A <span class="kw">Level 200</span> student at 
-  <span class="kw glow">Pentecost University</span> pursuing 
-  <span class="kw">Industrial Software Engineering</span> who is driven by the goal of building 
-  <span class="kw pulse">software systems</span> that are 
-  <span class="kw shine">reliable</span>, 
-  <span class="kw shine">efficient</span>, and never disappoint. 
-  I'm constantly sharpening my understanding of 
-  <span class="kw">communication systems</span>, architecture, and modern technologies so I can develop solutions with 
-  <span class="kw pulse">precision</span>, 
-  <span class="kw glow">confidence</span>, and real-world impact.
+
+<div class="hero-content">
+
+<div class="avatar">
+<img src="sam.jpg" alt="Samuel Osei Nyampong">
+</div>
+
+<div class="chip">
+PUIS/25120003 · ISE · DATA COMMUNICATIONS
+</div>
+
+<h1>
+Samuel Osei<br>
+<span>Nyampong</span>
+</h1>
+
+<p class="hero-bio">
+
+A <span class="kw">Level 200</span> student at
+<span class="kw glow">Pentecost University</span>
+pursuing
+<span class="kw">Industrial Software Engineering</span>
+who is driven by the goal of building
+<span class="kw pulse">software systems</span>
+that are
+<span class="kw shine">reliable</span>,
+<span class="kw shine">efficient</span>,
+and never disappoint.
+
+I'm constantly sharpening my understanding of
+<span class="kw">communication systems</span>,
+architecture, and modern technologies so I can develop solutions with
+<span class="kw pulse">precision</span>,
+<span class="kw glow">confidence</span>,
+and real-world impact.
+
 </p>
-    <div class="hero-btns">
-      <!-- Opens GitHub repo in a new tab -->
-      <a href="https://github.com/samzei19/data-communication-web-project" target="_blank" rel="noopener noreferrer" class="btn btn-y">Project Repository ↗</a>
-      <a href="#topics" class="btn btn-ghost">Explore Topics</a>
-    </div>
-  </div>
+
+<div class="hero-btns">
+
+<a href="https://github.com/samzei19/data-communication-web-project"
+target="_blank"
+class="btn btn-y">
+Project Repository ↗
+</a>
+
+<a href="#topics" class="btn btn-ghost">
+Explore Topics
+</a>
+
+</div>
+
+</div>
+
 </section>
 
 <!-- TOPICS -->
+
 <section id="topics">
+
 <div class="sec">
-  <div class="sec-chip">Course Content</div>
-  <h2 class="sec-title">A Summary of What I've Studied</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="card-num">01</div>
-      <h3>Signals & Data</h3>
-      <p>How data is represented and transmitted using analog and digital signals, and how devices convert information into transmittable forms.</p>
-    </div>
-    <div class="card">
-      <div class="card-num">02</div>
-      <h3>Transmission Media</h3>
-      <p>From fibre optics to wireless — understanding the different paths data can take and why some methods are faster, more reliable, or more secure.</p>
-    </div>
-    <div class="card">
-      <div class="card-num">03</div>
-      <h3>Error Detection</h3>
-      <p>How systems detect and correct mistakes during transmission using techniques like CRC, parity checking, and checksums.</p>
-    </div>
-    <div class="card">
-      <div class="card-num">04</div>
-      <h3>Network Models</h3>
-      <p>The OSI and TCP/IP models — how communication is divided into structured layers to make networking organized and scalable.</p>
-    </div>
-    <div class="card">
-      <div class="card-num">05</div>
-      <h3>Flow Control</h3>
-      <p>How devices manage traffic and avoid collisions so communication stays efficient when multiple systems send data simultaneously.</p>
-    </div>
-    <div class="card">
-      <div class="card-num">06</div>
-      <h3>Communication History</h3>
-      <p>From telegraph systems to modern internet infrastructure, understanding how global connectivity evolved into what it is today.</p>
-    </div>
-  </div>
+
+<div class="sec-chip">
+Course Content
 </div>
+
+<h2 class="sec-title">
+A Summary of What I've Studied
+</h2>
+
+<div class="grid">
+
+<div class="card">
+<div class="card-num">01</div>
+<h3>Signals & Data</h3>
+<p>How data is represented and transmitted using analog and digital signals.</p>
+</div>
+
+<div class="card">
+<div class="card-num">02</div>
+<h3>Transmission Media</h3>
+<p>Understanding fibre optics, wireless communication and reliable data transport.</p>
+</div>
+
+<div class="card">
+<div class="card-num">03</div>
+<h3>Error Detection</h3>
+<p>Learning how communication systems detect and correct transmission errors.</p>
+</div>
+
+<div class="card">
+<div class="card-num">04</div>
+<h3>Network Models</h3>
+<p>The OSI and TCP/IP models and how communication is layered systematically.</p>
+</div>
+
+<div class="card">
+<div class="card-num">05</div>
+<h3>Flow Control</h3>
+<p>Managing communication traffic to avoid collisions and transmission issues.</p>
+</div>
+
+<div class="card">
+<div class="card-num">06</div>
+<h3>Communication History</h3>
+<p>Understanding how communication evolved from telegraphs to modern networking.</p>
+</div>
+
+</div>
+
+</div>
+
 </section>
 
-<!-- TELEGRAPH / COMM FLOW — FULLY REVAMPED -->
+<!-- TELEGRAPH -->
+
 <section id="telegraph">
+
 <div class="sec">
-  <div class="sec-chip">System Communication</div>
-  <h2 class="sec-title">Modern Communication Flow</h2>
-  <p style="color:#777;line-height:1.85;max-width:750px;font-size:.95rem;margin-bottom:0;">
-    A visual breakdown of how data travels from sender to receiver through encoding, routing, decoding and modelled on real network architecture.
-  </p>
 
-  <div class="telegraph-wrap">
-    <div class="tg-header">
-      <h3>Live Data Pipeline Simulation</h3>
-      <p>Hover over any node to inspect it</p>
-    </div>
-
-    <!-- 5-node pipeline -->
-    <div class="pipeline">
-
-      <div class="pipe-node">
-        <span class="pipe-icon">🖥️</span>
-        <h4>Source</h4>
-        <small>User device generates raw data or message</small>
-      </div>
-
-      <div class="wire"></div>
-
-      <div class="pipe-node">
-        <span class="pipe-icon">⚡</span>
-        <h4>Encoder</h4>
-        <small>Data is encoded into bits &amp; modulated into signals</small>
-      </div>
-
-      <div class="wire"></div>
-
-      <div class="pipe-node">
-        <span class="pipe-icon">🌐</span>
-        <h4>Network</h4>
-        <small>Switches, routers &amp; channels carry the signal</small>
-      </div>
-
-      <div class="wire"></div>
-
-      <div class="pipe-node">
-        <span class="pipe-icon">📡</span>
-        <h4>Decoder</h4>
-        <small>Signal is demodulated back into readable data</small>
-      </div>
-
-      <div class="wire"></div>
-
-      <div class="pipe-node">
-        <span class="pipe-icon">📲</span>
-        <h4>Destination</h4>
-        <small>Receiver processes &amp; displays information</small>
-      </div>
-
-    </div>
-
-    <!-- bit stream -->
-    <div class="bit-stream">
-      <span class="bit-label">BITSTREAM →</span>
-      <div class="bits" id="bits"></div>
-      <div class="bits" id="bits2"></div>
-    </div>
-
-    <!-- OSI layers mini reference -->
-    <div class="layers-row">
-      <div class="layer-bar" data-n="7"><span>Application</span><small>HTTP · FTP · SMTP</small></div>
-      <div class="layer-bar" data-n="6"><span>Presentation</span><small>Encryption · Compression</small></div>
-      <div class="layer-bar" data-n="5"><span>Session</span><small>Session Management</small></div>
-      <div class="layer-bar" data-n="4"><span>Transport</span><small>TCP · UDP</small></div>
-      <div class="layer-bar" data-n="3"><span>Network</span><small>IP · Routing</small></div>
-      <div class="layer-bar" data-n="2"><span>Data Link</span><small>Frames · MAC</small></div>
-      <div class="layer-bar" data-n="1"><span>Physical</span><small>Cables · Signals</small></div>
-    </div>
-
-  </div>
+<div class="sec-chip">
+System Communication
 </div>
+
+<h2 class="sec-title">
+Modern Communication Flow
+</h2>
+
+<div class="telegraph-wrap">
+
+<div class="tg-header">
+<h3>Live Data Pipeline Simulation</h3>
+<p>Hover over any node to inspect it</p>
+</div>
+
+<div class="pipeline">
+
+<div class="pipe-node">
+
+<span class="pipe-icon">🖥️</span>
+
+<h4>Source</h4>
+
+<small>User device generates raw data</small>
+
+<div class="pipe-popup">
+<h5>Source System</h5>
+<p>
+The sender creates the original message before communication begins.
+</p>
+</div>
+
+</div>
+
+<div class="wire"></div>
+
+<div class="pipe-node">
+
+<span class="pipe-icon">⚡</span>
+
+<h4>Encoder</h4>
+
+<small>Data converted into signals</small>
+
+<div class="pipe-popup">
+<h5>Signal Encoding</h5>
+<p>
+The encoder transforms digital information into transmittable signals.
+</p>
+</div>
+
+</div>
+
+<div class="wire"></div>
+
+<div class="pipe-node">
+
+<span class="pipe-icon">🌐</span>
+
+<h4>Network</h4>
+
+<small>Routers and channels carry data</small>
+
+<div class="pipe-popup">
+<h5>Packet Routing</h5>
+<p>
+Network devices route packets through communication channels.
+</p>
+</div>
+
+</div>
+
+<div class="wire"></div>
+
+<div class="pipe-node">
+
+<span class="pipe-icon">📡</span>
+
+<h4>Decoder</h4>
+
+<small>Signals restored into data</small>
+
+<div class="pipe-popup">
+<h5>Signal Reconstruction</h5>
+<p>
+The decoder converts transmitted signals back into readable data.
+</p>
+</div>
+
+</div>
+
+<div class="wire"></div>
+
+<div class="pipe-node">
+
+<span class="pipe-icon">📲</span>
+
+<h4>Destination</h4>
+
+<small>Receiver processes the message</small>
+
+<div class="pipe-popup">
+<h5>End User Device</h5>
+<p>
+The destination receives and displays the transmitted information.
+</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- BITSTREAM -->
+
+<div class="bit-stream">
+
+<div class="bits-track">
+
+<div class="bits" id="bits"></div>
+
+<div class="bits" id="bits2"></div>
+
+</div>
+
+</div>
+
+<!-- OSI -->
+
+<div class="layers-row">
+
+<div class="layer-bar">
+<span>Application</span>
+<small>HTTP · FTP · SMTP</small>
+</div>
+
+<div class="layer-bar">
+<span>Presentation</span>
+<small>Encryption · Compression</small>
+</div>
+
+<div class="layer-bar">
+<span>Session</span>
+<small>Session Management</small>
+</div>
+
+<div class="layer-bar">
+<span>Transport</span>
+<small>TCP · UDP</small>
+</div>
+
+<div class="layer-bar">
+<span>Network</span>
+<small>IP · Routing</small>
+</div>
+
+<div class="layer-bar">
+<span>Data Link</span>
+<small>Frames · MAC</small>
+</div>
+
+<div class="layer-bar">
+<span>Physical</span>
+<small>Cables · Signals</small>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </section>
 
 <!-- REFLECTION -->
+
 <section id="reflection">
+
 <div class="sec">
-  <div class="sec-chip">Personal Reflection</div>
-  <h2 class="sec-title">Why This Course Stands Out</h2>
-  <div class="quote-block">
-    "I've come to understand that communication technology is one of those things most people use every day without thinking about what's happening underneath. Studying Data Communications made me appreciate the systems, engineering, and problem-solving that make global connectivity possible."
-  </div>
-  <p class="reflection-body">
-    What I enjoyed most about this course is how it connects software with real-world infrastructure. As an Industrial Software Engineering student, understanding both the software and the systems side matters and this course brought those together really well.
-    <br><br>
-    It also made me think more about how communication technology can improve accessibility, education, and digital opportunities across different communities, especially in contexts where connectivity is still being built out.
-  </p>
+
+<div class="sec-chip">
+Personal Reflection
 </div>
+
+<h2 class="sec-title">
+Why This Course Stands Out
+</h2>
+
+<div class="quote-block">
+
+"I've come to understand that communication technology is one of those things most people use every day without realizing the systems operating underneath."
+
+</div>
+
+<p class="reflection-body">
+
+Studying Data Communications helped me appreciate the engineering,
+infrastructure and layered systems that make global connectivity possible.
+
+As an Industrial Software Engineering student,
+the course strengthened my understanding of how software integrates with real-world communication systems.
+
+</p>
+
+</div>
+
 </section>
 
 <!-- VIDEO -->
+
 <section id="video">
+
 <div class="sec">
-  <div class="sec-chip">Learning Resource</div>
-  <h2 class="sec-title">The Telegraph Overview</h2>
-  <p style="color:#888;line-height:1.8;font-size:.95rem;">A solid overview of a very key Data Communications concept.</p>
-  <div class="video-frame">
-    <!-- YouTube video embedded in the same tab, plays inline -->
-    <iframe
-  width="800"
-  height="450"
-  src="https://www.youtube.com/embed/y-h9tD-ear4"
-  frameborder="0"
-  allowfullscreen>
-</iframe>
-  </div>
+
+<div class="sec-chip">
+Learning Resource
 </div>
+
+<h2 class="sec-title">
+The Telegraph Overview
+</h2>
+
+<div class="video-frame">
+
+<iframe
+src="https://www.youtube.com/embed/y-h9tD-ear4"
+allowfullscreen>
+</iframe>
+
+</div>
+
+</div>
+
 </section>
 
-<!-- RESOURCES (Link2 — includes assignment/Turnitin copy) -->
+<!-- RESOURCES -->
+
 <section id="resources">
+
 <div class="sec">
-  <div class="sec-chip">Resources</div>
-  <h2 class="sec-title">Assignment & References</h2>
-  <div class="resources-grid">
 
-    <div class="res-card">
-      <h4>Assignment Document</h4>
-      <p>A copy of the course assignment submitted via Turnitin. Click to view the full document in a new tab.</p>
-      <!-- Replace # with your actual Turnitin/assignment URL -->
-      <a href="https://github.com/samzei19/data-communication-web-project/blob/main/Study_on_Satellite_Communication_PUIS25120003.pdf" target="_blank" rel="noopener noreferrer">View Assignment ↗</a>
-    </div>
-
-    <div class="res-card">
-      <h4>GitHub Repository</h4>
-      <p>Full project source code and assets hosted on GitHub for review and assessment.</p>
-      <!-- Replace with your actual GitHub repo URL -->
-      <a href="https://github.com/samzei19/data-communication-web-project" target="_blank" rel="noopener noreferrer">Open on GitHub ↗</a>
-    </div>
-
-    <div class="res-card">
-      <h4>Telegraph Video</h4>
-      <p>YouTube resource on Data Communications concepts — plays embedded on this page in the Video section.</p>
-      <a href="#video">Watch Video ↑</a>
-    </div>
-
-  </div>
+<div class="sec-chip">
+Resources
 </div>
+
+<h2 class="sec-title">
+Assignment & References
+</h2>
+
+<div class="resources-grid">
+
+<div class="res-card">
+
+<h4>Assignment Document</h4>
+
+<p>
+A copy of the submitted course assignment document.
+</p>
+
+<a
+href="https://github.com/samzei19/data-communication-web-project/blob/main/Study_on_Satellite_Communication_PUIS25120003.pdf"
+target="_blank">
+View Assignment ↗
+</a>
+
+</div>
+
+<div class="res-card">
+
+<h4>GitHub Repository</h4>
+
+<p>
+Full source code and project assets hosted on GitHub.
+</p>
+
+<a
+href="https://github.com/samzei19/data-communication-web-project"
+target="_blank">
+Open Repository ↗
+</a>
+
+</div>
+
+<div class="res-card">
+
+<h4>Telegraph Video</h4>
+
+<p>
+Embedded educational video resource on communication systems.
+</p>
+
+<a href="#video">
+Watch Video ↑
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CONCLUSION -->
+
+<section id="conclusion">
+
+<div class="sec">
+
+<div class="telegraph-wrap" style="text-align:center;">
+
+<div class="sec-chip">
+Final Thoughts
+</div>
+
+<h2 class="sec-title">
+Communication Powers The Modern World
+</h2>
+
+<p style="
+max-width:760px;
+margin:auto;
+line-height:1.9;
+color:#8d8d8d;
+">
+
+Data Communications has shown me how interconnected software,
+networking, infrastructure and digital systems truly are.
+
+The course strengthened my understanding of how reliable communication systems are engineered to support businesses,
+education and global connectivity.
+
+As an Industrial Software Engineering student,
+this knowledge forms part of the foundation required to build scalable,
+efficient and dependable systems in the future.
+
+</p>
+
+<div style="
+margin-top:2rem;
+display:flex;
+justify-content:center;
+gap:1rem;
+flex-wrap:wrap;
+">
+
+<a href="#home" class="btn btn-y">
+Back To Top ↑
+</a>
+
+<a
+href="https://github.com/samzei19/data-communication-web-project"
+target="_blank"
+class="btn btn-ghost">
+View Repository
+</a>
+
+</div>
+
+</div>
+
+</div>
+
 </section>
 
 <!-- FOOTER -->
+
 <footer>
-  <p>Samuel Osei Nyampong · PUIS/25120003</p>
-  <p style="margin-top:.4rem;color:#3a3a3a;">Industrial Software Engineering · Data Communications · 2026</p>
+
+<p>
+Samuel Osei Nyampong · PUIS/25120003
+</p>
+
+<p>
+Industrial Software Engineering · Pentecost University
+</p>
+
+<p>
+DATA COMMUNICATIONS PORTFOLIO © 2026
+</p>
+
 </footer>
 
 <script>
-/* ─── PARTICLE / NODE NETWORK CANVAS BACKGROUND ─── */
+
+/* BACKGROUND NETWORK */
+
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 
-let W, H, nodes = [], edges = [];
+let W,H,nodes=[];
 
 function resize(){
+
   W = canvas.width = window.innerWidth;
   H = canvas.height = window.innerHeight;
 }
-resize();
-window.addEventListener('resize', () => { resize(); initNodes(); });
 
-const NODE_COUNT = 55;
+resize();
+
+window.addEventListener('resize',resize);
 
 function initNodes(){
-  nodes = Array.from({length: NODE_COUNT}, () => ({
-    x: Math.random() * W,
-    y: Math.random() * H,
-    vx: (Math.random() - .5) * .4,
-    vy: (Math.random() - .5) * .4,
-    r: Math.random() * 1.8 + .8,
+
+  nodes = Array.from({length:55},()=>({
+
+    x:Math.random()*W,
+    y:Math.random()*H,
+
+    vx:(Math.random()-.5)*.4,
+    vy:(Math.random()-.5)*.4,
+
+    r:Math.random()*1.8+.8
+
   }));
 }
+
 initNodes();
 
 function draw(){
-  ctx.clearRect(0, 0, W, H);
 
-  // update positions
-  nodes.forEach(n => {
+  ctx.clearRect(0,0,W,H);
+
+  nodes.forEach(n=>{
+
     n.x += n.vx;
     n.y += n.vy;
-    if(n.x < 0 || n.x > W) n.vx *= -1;
-    if(n.y < 0 || n.y > H) n.vy *= -1;
+
+    if(n.x<0||n.x>W) n.vx*=-1;
+    if(n.y<0||n.y>H) n.vy*=-1;
+
   });
 
-  // draw edges
-  for(let i = 0; i < nodes.length; i++){
-    for(let j = i+1; j < nodes.length; j++){
+  for(let i=0;i<nodes.length;i++){
+
+    for(let j=i+1;j<nodes.length;j++){
+
       const dx = nodes[i].x - nodes[j].x;
       const dy = nodes[i].y - nodes[j].y;
+
       const dist = Math.sqrt(dx*dx + dy*dy);
+
       if(dist < 160){
+
         ctx.beginPath();
-        ctx.strokeStyle = `rgba(255,212,59,${.12 * (1 - dist/160)})`;
-        ctx.lineWidth = .5;
-        ctx.moveTo(nodes[i].x, nodes[i].y);
-        ctx.lineTo(nodes[j].x, nodes[j].y);
+
+        ctx.strokeStyle =
+        `rgba(255,212,59,${.12*(1-dist/160)})`;
+
+        ctx.lineWidth=.5;
+
+        ctx.moveTo(nodes[i].x,nodes[i].y);
+        ctx.lineTo(nodes[j].x,nodes[j].y);
+
         ctx.stroke();
       }
+
     }
+
   }
 
-  // draw nodes
-  nodes.forEach(n => {
+  nodes.forEach(n=>{
+
     ctx.beginPath();
-    ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(255,212,59,0.35)';
+
+    ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+
+    ctx.fillStyle='rgba(255,212,59,.35)';
+
     ctx.fill();
+
   });
 
   requestAnimationFrame(draw);
 }
+
 draw();
 
-/* ─── BIT STREAM GENERATOR ─── */
+/* BITS */
+
 function makeBits(){
-  const bits = Array.from({length:80}, () => Math.round(Math.random()));
-  return bits.map(b => `<span class="bit ${b?'one':''}">${b}</span>`).join('');
+
+  const bits = Array.from(
+    {length:150},
+    ()=>Math.round(Math.random())
+  );
+
+  return bits
+    .map(b=>`<span class="bit ${b?'one':''}">${b}</span>`)
+    .join('');
 }
+
 document.getElementById('bits').innerHTML = makeBits();
 document.getElementById('bits2').innerHTML = makeBits();
+
 </script>
+
 </body>
 </html>
