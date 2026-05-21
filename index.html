@@ -63,17 +63,94 @@ nav{
   text-transform:uppercase;
 }
 
-.nav-links{ display:flex; gap:1.5rem; list-style:none; }
+.nav-links{
+  display:flex;
+  gap:1.6rem;
+  list-style:none;
+}
+
 .nav-links a{
-  color:#aaa;
+  position:relative;
   text-decoration:none;
   font-size:.85rem;
-  font-weight:500;
-  letter-spacing:.04em;
-  transition:.2s;
+  font-weight:700;
+  letter-spacing:.06em;
   font-family:'DM Mono',monospace;
+
+  background:linear-gradient(
+    90deg,
+    #ffd43b 0%,
+    #fff3a3 25%,
+    #ffb703 50%,
+    #fff3a3 75%,
+    #ffd43b 100%
+  );
+
+  background-size:300% auto;
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  animation:navFlow 6s linear infinite;
+
+  transition:
+    transform .25s ease,
+    filter .25s ease;
+
+  padding:.2rem 0;
 }
-.nav-links a:hover{ color:var(--y); }
+
+/* glowing hover effect */
+.nav-links a:hover{
+  transform:translateY(-2px);
+
+  filter:
+    drop-shadow(0 0 6px rgba(255,212,59,.85))
+    drop-shadow(0 0 18px rgba(255,212,59,.45));
+}
+
+/* animated underline */
+.nav-links a::after{
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:-6px;
+
+  width:0%;
+  height:2px;
+
+  border-radius:20px;
+
+  background:linear-gradient(
+    90deg,
+    transparent,
+    #ffd43b,
+    #fff4b0,
+    #ffd43b,
+    transparent
+  );
+
+  box-shadow:
+    0 0 10px rgba(255,212,59,.75),
+    0 0 25px rgba(255,212,59,.25);
+
+  transition:width .35s ease;
+}
+
+.nav-links a:hover::after{
+  width:100%;
+}
+
+/* moving horizontal gradient */
+@keyframes navFlow{
+  0%{
+    background-position:0% center;
+  }
+
+  100%{
+    background-position:300% center;
+  }
+}
 
 /* ─── LAYOUT ─── */
 section{ position:relative; z-index:2; }
